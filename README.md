@@ -1,7 +1,5 @@
 # IMSE_SS23_Project
 
-The project from the course "Datenbanksysteme" in the WS22 at the University of Vienna.
-
 ## Idea:
 
 Create a functioning PHP frontend with REST API integration to communicate between a DB and the frontend with easy switch and data migration from SQL to NoSQL
@@ -14,7 +12,7 @@ Create a functioning PHP frontend with REST API integration to communicate betwe
 - MariaDB
 - MongoDB
 
-# Steps
+## Steps
 
 1. Clone the repository locally
 2. In the terminal run
@@ -28,3 +26,17 @@ docker-compose up --build
 ```shell
 docker exec -it imse_proj-frontend-1 bash
 ```
+
+4. You should be in the frontend container now.
+5. Test the connection to the 2 Databases:
+   5.1. MariaDB
+
+   ```shell
+   mysql -h mariadb -u root -pimse23ss
+   ```
+
+   5.2. MongoDB
+
+   ```shell
+   --TODO
+   ```
