@@ -15,11 +15,12 @@ RUN apt-get update && apt-get install -y \
     unzip \
     && pecl install mongodb \
     && docker-php-ext-enable mongodb \
+    && echo extension=mongodb.so >> /usr/local/etc/php/php.ini \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Expose ports
-EXPOSE 80 3306
+EXPOSE 80
 
 # Set up working directory
 WORKDIR /var/www/html
