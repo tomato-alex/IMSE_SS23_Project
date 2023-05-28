@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:80
+    links:
+      - mariadb
+      - mongodb
+
+  mariadb:
+    image: mariadb
+    environment:
+      - MYSQL_ROOT_PASSWORD=imse23ss
+
+  mongodb:
+    image: mongo
