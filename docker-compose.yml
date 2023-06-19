@@ -1,20 +1,41 @@
-version: '3'
-
+version: '3.7'
 services:
-  frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - 8080:80
-    links:
-      - mariadb
-      - mongodb
+  java:
+    image: openjdk:11
+    volumes:
+      - ./java-app:/app
+    working_dir: /java
+
+    # Add any additional configuration for the Java container here
 
   mariadb:
     image: mariadb
+    restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=imse23ss
+      - MYSQL_USER=testpass
+      - MYSQL_PASSWORD=testpass
+      - MYSQL_ROOT_PASSWORD=testpass
+      - MYSQL_DATABASE=imse_23_ss
+    volumes:
+    ports:
+      - 3307:3306
+    # Add any additional configuration for the MariaDB container here
 
   mongodb:
     image: mongo
+    volumes:
+      - ./mongodb-data:/data/db
+    # Add any additional configuration for the MongoDB container here
+
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile.php
+    ports:
+      - 80:80
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./php-files:/var/www/html
+      - ./apache.conf:/etc/apache2/conf-enabled/custom.conf
+
