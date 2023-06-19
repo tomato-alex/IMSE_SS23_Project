@@ -15,7 +15,7 @@ $surname = '';
 if (isset($_POST['surname'])) {
     $surname = $_POST['surname'];
 }
-
+echo "<p>" . $_SESSION['id'] . "</p>";
 // Insert method
 $success = $database->insertIntoEmployee($name, $surname, $_SESSION["id"]);
 

@@ -22,7 +22,7 @@ public class DataGenerator {
     private void fillCitiesAndCountriesList() {
         String line = "";
         try {
-            BufferedReader br = new BufferedReader(new FileReader("/Users/drago/UNI/5.Semester/Datenbanksysteme/Project - Car Seller/Milestone 4/java/resources/cities_countries.csv"));
+            BufferedReader br = new BufferedReader(new FileReader("../../resources/cities_countries.csv"));
             String headers = br.readLine();
             while ((line = br.readLine()) != null) {
                 String[] parameters = line.split(",");
@@ -39,7 +39,8 @@ public class DataGenerator {
     private void fillAddressList() {
         String line;
         try {
-            BufferedReader br = new BufferedReader(new FileReader("/Users/drago/UNI/5.Semester/Datenbanksysteme/Project - Car Seller/Milestone 4/java/resources/austrian-streets.csv"));
+            BufferedReader br = new BufferedReader(new FileReader(
+                    "../../resources/austrian-streets.csv"));
             String headers = br.readLine();
             while ((line = br.readLine()) != null) {
                 addresses.add(line + " " + (rand.nextInt(40) + 1));
@@ -52,7 +53,8 @@ public class DataGenerator {
     private void fillListWithNames() {
         String line;
         try {
-            BufferedReader br = new BufferedReader(new FileReader("/Users/drago/UNI/5.Semester/Datenbanksysteme/Project - Car Seller/Milestone 4/java/resources/name_list.csv"));
+            BufferedReader br = new BufferedReader(new FileReader(
+                    "../../resources/name_list.csv"));
             while ((line = br.readLine()) != null) {
                 String[] parameters = line.split(",");
                 first_names.add(parameters[0]);
@@ -66,7 +68,8 @@ public class DataGenerator {
     private void fillListWithCars() {
         String line;
         try {
-            BufferedReader br = new BufferedReader(new FileReader("/Users/drago/UNI/5.Semester/Datenbanksysteme/Project - Car Seller/Milestone 4/java/resources/cars.csv"));
+            BufferedReader br = new BufferedReader(new FileReader(
+                    "../../resources/cars.csv"));
             String headers = br.readLine();
             while ((line = br.readLine()) != null) {
                 String[] parameters = line.split(",");

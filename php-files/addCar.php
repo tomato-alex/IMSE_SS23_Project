@@ -20,7 +20,7 @@ $leasingNr = '';
 if (isset($_POST['leasingNr'])) {
     $leasingNr = $_POST['leasingNr'];
 }
-
+echo "<p>" . $leasingNr . $model . $brand . "</p>";
 $success = $database->insertIntoCar($model, $brand, $leasingNr, $_SESSION["id"]);
 
 // Check result

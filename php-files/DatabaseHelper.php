@@ -42,12 +42,57 @@ class DatabaseHelper
     // 2-dimensional array: the result array contains nested arrays (each contains the data of a single row)
     public function selectAllLocations($fid, $stadt, $land, $adresse)
     {
-        $sql = "SELECT * FROM location
-        WHERE locationId LIKE '%{$fid}%'
-          AND upper(city) LIKE upper('%{$stadt}%')
-          AND upper(country) LIKE upper('%{$land}%')
-          AND upper(address) LIKE upper('%{$adresse}')
-        ORDER BY country ASC";
+        $sql = "SELECT * FROM location WHERE 1=1";
+        $params = array();
+
+        if (!empty($stadt)) {
+            $sql .= " AND city LIKE ?";
+            $params[] = "%$stadt%";
+        }
+
+        if (!empty($fid)) {
+            $sql .= " AND locationId LIKE ?";
+            $params[] = "%$fid%";
+        }
+
+        if (!empty($land)) {
+            $sql .= " AND country LIKE ?";
+            $params[] = "%$land%";
+        }
+
+        // Add additional conditions for other optional parameters if needed
+
+        $sql .= " ORDER BY country ASC";
+
+        $statement = mysqli_prepare($this->conn, $sql);
+
+        // Bind parameters dynamically
+        if (!empty($params)) {
+            $types = str_repeat('s', count($params));
+            mysqli_stmt_bind_param($statement, $types, ...$params);
+        }
+
+        mysqli_stmt_execute($statement);
+        $result = mysqli_stmt_get_result($statement);
+        $res = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+        // Clean up
+        mysqli_stmt_close($statement);
+
+        return $res;
+    }
+
+
+
+    public function selectCarsFromLocation($aid, $marke, $modell, $lnr, $id)
+    {
+        $sql = "SELECT * FROM car 
+         WHERE carId IN (SELECT carId from has WHERE locationId = '$id')
+          AND carId LIKE '%{$aid}%'
+          AND upper(brand) LIKE upper('%{$marke}%')
+          AND upper(modell) LIKE upper('%{$modell}%')
+          AND leasingNr LIKE '%{$lnr}%'
+          ORDER BY brand ASC";
 
         $statement = mysqli_query($this->conn, $sql);
 
@@ -65,148 +110,138 @@ class DatabaseHelper
     }
 
 
-    public function selectCarsFromLocation($aid, $marke, $modell, $lnr, $id)
-    {
-        $sql = "SELECT * FROM AUTO 
-         WHERE AID IN (SELECT AID from HAT WHERE fid = '$id')
-          AND aid LIKE '%{$aid}%'
-          AND upper(marke) LIKE upper('%{$marke}%')
-          AND upper(modell) LIKE upper('%{$modell}%')
-          AND lnr LIKE '%{$lnr}%'
-          ORDER BY marke ASC";
-
-        $statement = oci_parse($this->conn, $sql);
-        oci_execute($statement);
-        oci_fetch_all($statement, $res, null, null, OCI_FETCHSTATEMENT_BY_ROW);
-
-        //clean up;
-        oci_free_statement($statement);
-
-        return $res;
-    }
-
     public function selectEmployeesFromLocation($fid)
     {
-        $sql = "SELECT * FROM Mitarbeiter 
-         WHERE FID = '{$fid}'";
-
-        $statement = oci_parse($this->conn, $sql);
-        oci_execute($statement);
-        oci_fetch_all($statement, $res, null, null, OCI_FETCHSTATEMENT_BY_ROW);
-
-        //clean up;
-        oci_free_statement($statement);
+        $sql = "SELECT * FROM employee WHERE locationId = ?";
+        $statement = mysqli_prepare($this->conn, $sql);
+        mysqli_stmt_bind_param($statement, 's', $fid);
+        mysqli_stmt_execute($statement);
+        $result = mysqli_stmt_get_result($statement);
+        $res = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        mysqli_stmt_close($statement);
 
         return $res;
     }
 
     public function selectSales($fid)
     {
-        $sql = "select * from total_sales where mid in (select mid FROM Mitarbeiter WHERE FID = '{$fid}')";
+        $sql = "SELECT * FROM total_sales WHERE employeeId IN (SELECT employeeId FROM employee WHERE locationId = ?)";
 
-        $statement = oci_parse($this->conn, $sql);
-        oci_execute($statement);
-        oci_fetch_all($statement, $res, null, null, OCI_FETCHSTATEMENT_BY_ROW);
-
-        //clean up;
-        oci_free_statement($statement);
+        $statement = mysqli_prepare($this->conn, $sql);
+        mysqli_stmt_bind_param($statement, 's', $fid);
+        mysqli_stmt_execute($statement);
+        $result = mysqli_stmt_get_result($statement);
+        $res = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        mysqli_stmt_close($statement);
 
         return $res;
     }
 
+
     // This function creates and executes a SQL insert statement and returns true or false
     public function insertIntoLocation($stadt, $land, $adresse)
     {
-        $sql = "INSERT INTO FILIALE (stadt, land, adresse) VALUES ('{$stadt}', '{$land}','{$adresse}')";
+        $sql = "INSERT INTO location (city, country, address) VALUES (?, ?, ?)";
 
-        $statement = oci_parse($this->conn, $sql);
-        $success = oci_execute($statement) && oci_commit($this->conn);
-        oci_free_statement($statement);
+        $statement = mysqli_prepare($this->conn, $sql);
+        mysqli_stmt_bind_param($statement, 'sss', $stadt, $land, $adresse);
+        $success = mysqli_stmt_execute($statement);
+        mysqli_stmt_close($statement);
+
         return $success;
     }
+
 
     public function insertIntoCar($marke, $modell, $lnr, $fid)
     {
-        $sql = "INSERT INTO AUTO (marke, modell, lnr) VALUES ('{$marke}','{$modell}', '{$lnr}')";
-        $statement = oci_parse($this->conn, $sql);
-        oci_execute($statement);
+        // Insert car
+        $sql = "INSERT INTO car (brand, modell, leasingNr) VALUES (?, ?, ?)";
+        $statement = mysqli_prepare($this->conn, $sql);
+        mysqli_stmt_bind_param($statement, 'sss', $marke, $modell, $lnr);
+        $s1 = mysqli_stmt_execute($statement);
+        mysqli_stmt_close($statement);
 
-        $sql = "SELECT AID from AUTO WHERE MARKE = '{$marke}' AND MODELL ='{$modell}' AND aid = (SELECT MAX(aid) FROM AUTO)";
-        $statement = oci_parse($this->conn, $sql);
-        oci_execute($statement);
+        // Get carId of the inserted car
+        $sql = "SELECT carId FROM car WHERE brand = ? AND modell = ? AND carId = (SELECT MAX(carId) FROM car)";
+        $statement = mysqli_prepare($this->conn, $sql);
+        mysqli_stmt_bind_param($statement, 'ss', $marke, $modell);
+        $s2 = mysqli_stmt_execute($statement);
+        $result = mysqli_stmt_get_result($statement);
+        $row = mysqli_fetch_assoc($result);
+        $autoID = $row['carId'];
+        mysqli_stmt_close($statement);
+        echo "<p>H" . $s1 . "_" . $s2 . "</p>";
+        echo "_" . $autoID . "_" . $fid;
+        // Insert into has table
+        $sql = "INSERT INTO has (locationId, carId) VALUES (?, ?)";
+        $statement = mysqli_prepare($this->conn, $sql);
+        mysqli_stmt_bind_param($statement, 'ii', $fid, $autoID);
+        $success = mysqli_stmt_execute($statement);
+        mysqli_stmt_close($statement);
 
-        while ($row = oci_fetch_array($statement, OCI_NUM)) {
-            $AutoID = $row[0];
-        }
-
-        $sql = "INSERT INTO HAT (FID, AID) VALUES ('{$fid}', '{$AutoID}')";
-        $statement = oci_parse($this->conn, $sql);
-        $success = oci_execute($statement);
-
-        oci_commit($this->conn);
-        oci_free_statement($statement);
         return $success;
     }
+
 
     public function insertIntoEmployee($name, $surname, $fid)
     {
         $errorcode = 0;
+        $sql = "INSERT into employee (first_name, last_name, locationId) values (?, ?, ?)";
+        $statement = mysqli_prepare($this->conn, $sql);
+        mysqli_stmt_bind_param($statement, 'sss', $name, $surname, $fid);
+        $success = mysqli_stmt_execute($statement);
+        mysqli_stmt_close($statement);
 
-        $sql = 'BEGIN add_mitarbeiter(:name, :surname, :fid, :errorcode); END;';
-        $statement = @oci_parse($this->conn, $sql);
-
-        //  Bind the parameters
-        @oci_bind_by_name($statement, ':name', $name);
-        @oci_bind_by_name($statement, ':surname', $surname);
-        @oci_bind_by_name($statement, ':fid', $fid);
-        @oci_bind_by_name($statement, ':errorcode', $errorcode);
-
-        @oci_execute($statement);
-        @oci_free_statement($statement);
-
-        return $errorcode;
+        return $success;
     }
 
     public function deleteLocation($location_id)
     {
-        $test = 'SELECT * FROM FILIALE WHERE fid = :location_id';
-        $statement = oci_parse($this->conn, $test);
-        oci_bind_by_name($statement, ':location_id', $location_id);
-        oci_execute($statement);
-        oci_fetch_all($statement, $res, null, null, OCI_FETCHSTATEMENT_BY_ROW);
-        if ($res == null) {
-            oci_free_statement($statement);
+        $test = 'SELECT * FROM location WHERE locationId = ?';
+        $statement = mysqli_prepare($this->conn, $test);
+        mysqli_stmt_bind_param($statement, 'i', $location_id);
+        mysqli_stmt_execute($statement);
+        $result = mysqli_stmt_get_result($statement);
+        $res = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        mysqli_stmt_close($statement);
+
+        if (empty($res)) {
             return 0;
         }
 
-        $sql = 'DELETE FROM FILIALE WHERE fid= :location_id';
-        $statement = oci_parse($this->conn, $sql);
+        $sql = 'DELETE FROM location WHERE locationId = ?';
+        $statement = mysqli_prepare($this->conn, $sql);
+        mysqli_stmt_bind_param($statement, 'i', $location_id);
+        mysqli_stmt_execute($statement);
+        mysqli_stmt_close($statement);
 
-        oci_bind_by_name($statement, ':location_id', $location_id);
-
-        oci_execute($statement);
-        oci_free_statement($statement);
         return 1;
     }
+
 
     public function deleteCar($location_id, $car_id)
     {
-        $test = "SELECT * FROM HAT WHERE fid = '{$location_id}' AND aid = '{$car_id}'";
-        $statement = oci_parse($this->conn, $test);
-        oci_execute($statement);
-        oci_fetch_all($statement, $res, null, null, OCI_FETCHSTATEMENT_BY_ROW);
-        if ($res == null) {
-            oci_free_statement($statement);
+        $test = "SELECT * FROM has WHERE locationId = ? AND carId = ?";
+        $statement = mysqli_prepare($this->conn, $test);
+        mysqli_stmt_bind_param($statement, 'ii', $location_id, $car_id);
+        mysqli_stmt_execute($statement);
+        $result = mysqli_stmt_get_result($statement);
+        $res = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        mysqli_stmt_close($statement);
+
+        if (empty($res)) {
             return 0;
         }
 
-        $sql = "DELETE FROM HAT WHERE FID = '{$location_id}' AND AID = '{$car_id}'";
-        $statement = oci_parse($this->conn, $sql);
+        $sql = "DELETE FROM has WHERE locationId = ? AND carId = ?";
+        $statement = mysqli_prepare($this->conn, $sql);
+        mysqli_stmt_bind_param($statement, 'ii', $location_id, $car_id);
+        mysqli_stmt_execute($statement);
+        mysqli_stmt_close($statement);
 
-        oci_execute($statement);
-        oci_free_statement($statement);
         return 1;
     }
+
 
     public function deleteEmployee($id)
     {
@@ -226,12 +261,19 @@ class DatabaseHelper
 
     public function getLocationName($id)
     {
-        $sql = 'SELECT stadt FROM filiale WHERE fid = :id';
-        $statement = oci_parse($this->conn, $sql);
-        oci_bind_by_name($statement, ':id', $id);
-        oci_execute($statement);
-        oci_fetch_all($statement, $res, null, null, OCI_FETCHSTATEMENT_BY_ROW);
-        oci_free_statement($statement);
+        $sql = 'SELECT city FROM location WHERE locationId = ?';
+        $statement = mysqli_prepare($this->conn, $sql);
+        mysqli_stmt_bind_param($statement, 'i', $id);
+
+        // Debug statement to check the query
+        //echo "Query: " . $sql . " with id = " . $id . PHP_EOL;
+        //echo $statement;
+
+        mysqli_stmt_execute($statement);
+        $result = mysqli_stmt_get_result($statement);
+        $res = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        //echo $res[0]['city'];
+        mysqli_stmt_close($statement);
 
         return $res;
     }

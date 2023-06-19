@@ -7,7 +7,7 @@ public class DatabaseHelper {
     // Database connection info
     private static final String DB_CONNECTION_URL = "jdbc:mysqli://localhost:3306/imse_23_ss";
     private static final String USER = "root";
-    private static final String PASS = "imse23ss";
+    private static final String PASS = "testpass";
 
     // Connection and Statement needed for the execution
     private static Connection con;
@@ -26,7 +26,7 @@ public class DatabaseHelper {
 
     // INSERT INTO
     public void insertIntoFiliale(String stadt, String land, String adresse) {
-        String statementString = "INSERT INTO FILIALE(stadt, land, adresse) VALUES (?,?,?)";
+        String statementString = "INSERT INTO location(city, country, address) VALUES (?,?,?)";
         try {
             prepStmt = con.prepareStatement(statementString);
             prepStmt.setString(1, stadt);
@@ -40,7 +40,7 @@ public class DatabaseHelper {
     }
 
     public void insertIntoAutowerkstatt(int fid, String telefonnummer, int Anz_mit) {
-        String statementString = "INSERT INTO AUTOWERKSTATT(fid, telefonnummer, anzahl_mitarbeiter) VALUES (?,?,?)";
+        String statementString = "INSERT INTO workshop(locationId, phone_number, employee_count) VALUES (?,?,?)";
         try {
             prepStmt = con.prepareStatement(statementString);
             prepStmt.setInt(1, fid);
@@ -54,7 +54,7 @@ public class DatabaseHelper {
     }
 
     public void insertIntoLeasing(int dauer, double preis) {
-        String statementString = "INSERT INTO LEASING(dauer, preis) VALUES (?,?)";
+        String statementString = "INSERT INTO leasing(duration, fee) VALUES (?,?)";
         try {
             prepStmt = con.prepareStatement(statementString);
             prepStmt.setInt(1, dauer);
@@ -67,7 +67,7 @@ public class DatabaseHelper {
     }
 
     public void insertIntoAuto(String marke, String modell, int lnr) {
-        String statementString = "INSERT INTO AUTO(marke, modell, lnr) VALUES (?,?,?)";
+        String statementString = "INSERT INTO car(brand, modell, leasingNr) VALUES (?,?,?)";
         try {
             prepStmt = con.prepareStatement(statementString);
             prepStmt.setString(1, marke);
@@ -80,37 +80,9 @@ public class DatabaseHelper {
         }
     }
 
-    public void insertIntoElektroauto(int aid, int reichweite, double kWh) {
-        String statementString = "INSERT INTO ELEKTROAUTO(aid, reichweite, kwh) VALUES (?,?,?)";
-        try {
-            prepStmt = con.prepareStatement(statementString);
-            prepStmt.setInt(1, aid);
-            prepStmt.setInt(2, reichweite);
-            prepStmt.setDouble(3, kWh);
-            prepStmt.executeUpdate();
-            prepStmt.close();
-        } catch (Exception e) {
-            System.err.println("Error at: insertIntoEketroauto\nmessage: " + e.getMessage());
-        }
-    }
-
-    public void insertIntoSUV(int aid, double motorgroesse, double verbrauch) {
-        String statementString = "INSERT INTO SUV(aid, motorgroesse, verbrauch) VALUES (?,?,?)";
-        try {
-            prepStmt = con.prepareStatement(statementString);
-            prepStmt.setInt(1, aid);
-            prepStmt.setDouble(2, motorgroesse);
-            prepStmt.setDouble(3, verbrauch);
-            prepStmt.executeUpdate();
-            prepStmt.close();
-        } catch (Exception e) {
-            System.err.println("Error at: insertIntoSuv\nmessage: " + e.getMessage());
-        }
-    }
-
     public void insertIntoMitarbeiter(String vorname, String nachname, int fid, Integer chefid) {
         if (chefid == null) {
-            String statementString = "INSERT INTO MITARBEITER(vorname, nachname, fid) VALUES (?,?,?)";
+            String statementString = "INSERT INTO employee(first_name, last_name, locationId) VALUES (?,?,?)";
             try {
                 prepStmt = con.prepareStatement(statementString);
                 prepStmt.setString(1, vorname);
@@ -123,7 +95,7 @@ public class DatabaseHelper {
                 System.err.println("Error at: insertIntoMitarbeiter\nmessage: " + e.getMessage());
             }
         } else {
-            String statementString = "INSERT INTO MITARBEITER(vorname, nachname, fid, chefid) VALUES (?,?,?,?)";
+            String statementString = "INSERT INTO employee(first_name, last_name, locationId, managerId) VALUES (?,?,?,?)";
             try {
                 prepStmt = con.prepareStatement(statementString);
                 prepStmt.setString(1, vorname);
@@ -139,7 +111,7 @@ public class DatabaseHelper {
     }
 
     public void insertIntoVerkauft(int mid, int aid, double preis, String date) {
-        String statementString = "INSERT INTO VERKAUFT(mid, aid, preis, datum) VALUES (?,?,?,?)";
+        String statementString = "INSERT INTO sells(employeeId, carId, price, date) VALUES (?,?,?,?)";
         try {
             prepStmt = con.prepareStatement(statementString);
             prepStmt.setInt(1, mid);
@@ -154,7 +126,7 @@ public class DatabaseHelper {
     }
 
     public void insertIntoHat(int fid, int aid) {
-        String statementString = "INSERT INTO HAT(fid, aid) VALUES (?,?)";
+        String statementString = "INSERT INTO has(locationId, carId) VALUES (?,?)";
         try {
             prepStmt = con.prepareStatement(statementString);
             prepStmt.setInt(1, fid);
@@ -173,7 +145,7 @@ public class DatabaseHelper {
         List<Integer> fid = new ArrayList<>();
         ResultSet rs;
         try {
-            rs = stmt.executeQuery("SELECT fid FROM filiale");
+            rs = stmt.executeQuery("SELECT locationId FROM location");
             while (rs.next()) {
                 fid.add(rs.getInt(1));
             }
@@ -189,7 +161,7 @@ public class DatabaseHelper {
         List<Integer> lnr = new ArrayList<>();
         ResultSet rs;
         try {
-            rs = stmt.executeQuery("SELECT LNR FROM LEASING");
+            rs = stmt.executeQuery("SELECT leasingNr FROM leasing");
             while (rs.next()) {
                 lnr.add(rs.getInt(1));
             }
@@ -205,7 +177,7 @@ public class DatabaseHelper {
         List<Integer> aid = new ArrayList<>();
         ResultSet rs;
         try {
-            rs = stmt.executeQuery("SELECT AID FROM AUTO");
+            rs = stmt.executeQuery("SELECT carId FROM car");
             while (rs.next()) {
                 aid.add(rs.getInt(1));
             }
@@ -221,7 +193,7 @@ public class DatabaseHelper {
         List<Integer> mid = new ArrayList<>();
         ResultSet rs;
         try {
-            rs = stmt.executeQuery("SELECT MID FROM MITARBEITER");
+            rs = stmt.executeQuery("SELECT employeeId FROM employee");
             while (rs.next()) {
                 mid.add(rs.getInt(1));
             }
@@ -236,7 +208,7 @@ public class DatabaseHelper {
         Map<Integer, Integer> fidAndMid = new HashMap<>();
         ResultSet rs;
         try {
-            rs = stmt.executeQuery("SELECT FID, MID FROM MITARBEITER");
+            rs = stmt.executeQuery("SELECT locationId, managerId FROM employee");
             while (rs.next()) {
                 fidAndMid.put(rs.getInt(1), rs.getInt(2));
             }
