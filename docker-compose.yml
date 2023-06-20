@@ -1,15 +1,15 @@
 version: '3.7'
 services:
   java:
-    image: openjdk
+    image: openjdk:17
     volumes:
-      - ./java-app:/app
+      - ./java:/java
     working_dir: /java
-
+    command: java -jar databasefiller.jar
     # Add any additional configuration for the Java container here
 
-  mariadb:
-    image: mariadb
+  mysql:
+    image: mysql
     restart: always
     environment:
       - MYSQL_USER=testpass
@@ -17,9 +17,9 @@ services:
       - MYSQL_ROOT_PASSWORD=testpass
       - MYSQL_DATABASE=imse_23_ss
     volumes:
+      - ./sql:/docker-entrypoint-initdb.d
     ports:
-      - 3307:3306
-    # Add any additional configuration for the MariaDB container here
+      - 3308:3306
 
   mongodb:
     image: mongo
@@ -38,4 +38,3 @@ services:
     volumes:
       - ./php-files:/var/www/html
       - ./apache.conf:/etc/apache2/conf-enabled/custom.conf
-

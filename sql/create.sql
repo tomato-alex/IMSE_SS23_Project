@@ -65,6 +65,7 @@ CREATE TABLE has(
     FOREIGN KEY (locationId) REFERENCES location(locationId) ON DELETE CASCADE,
     FOREIGN KEY (carId) REFERENCES car(carId) ON DELETE CASCADE
 );
+commit;
 -- VIEWS
 CREATE VIEW leasing_options AS
 SELECT car.brand,

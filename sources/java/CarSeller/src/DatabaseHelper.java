@@ -4,8 +4,8 @@ import java.util.*;
 import java.util.ArrayList;
 
 public class DatabaseHelper {
-    // Database connection info
-    private static final String DB_CONNECTION_URL = "jdbc:mysqli://localhost:3306/imse_23_ss";
+	private static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
+    private static final String DB_CONNECTION_URL = "jdbc:mysql://localhost:3306/imse_23_ss";
     private static final String USER = "root";
     private static final String PASS = "testpass";
 
@@ -16,6 +16,7 @@ public class DatabaseHelper {
 
     DatabaseHelper() {
         try {
+            Class.forName(JDBC_DRIVER);
             // Establish a connection to the database
             con = DriverManager.getConnection(DB_CONNECTION_URL, USER, PASS);
             stmt = con.createStatement();

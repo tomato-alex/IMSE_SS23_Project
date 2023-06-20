@@ -5,7 +5,7 @@ class DatabaseHelper
     // Details for connecting with the database
     const username = 'root';
     const password = 'testpass';
-    const host = 'mariadb';
+    const host = 'mysql';
     const database = 'imse_23_ss';
     const port = '3306';
 
@@ -15,15 +15,16 @@ class DatabaseHelper
     public function __construct()
     {
         try {
-            // Create connection with the command oci_connect(String(username), String(password), String(connection_string))
+            // Create connection with the command mysqli_connect(String(host), String(username), String(password), String(database), Integer(port))
             $this->conn = mysqli_connect(
                 DatabaseHelper::host,
                 DatabaseHelper::username,
                 DatabaseHelper::password,
-                DatabaseHelper::database
+                DatabaseHelper::database,
+                DatabaseHelper::port
             );
 
-            //check if the connection object is != null
+            // Check if the connection object is not null
             if (!$this->conn) {
                 die("DB error: Connection can't be established!");
             }
@@ -31,7 +32,10 @@ class DatabaseHelper
             die("DB error: {$e->getMessage()}");
         }
     }
-
+    public function getConnection()
+    {
+        return $this->conn;
+    }
     public function __destruct()
     {
         // clean up
@@ -42,6 +46,7 @@ class DatabaseHelper
     // 2-dimensional array: the result array contains nested arrays (each contains the data of a single row)
     public function selectAllLocations($fid, $stadt, $land, $adresse)
     {
+        //echo mysqli_error($this->conn);
         $sql = "SELECT * FROM location WHERE 1=1";
         $params = array();
 
@@ -170,8 +175,8 @@ class DatabaseHelper
         $row = mysqli_fetch_assoc($result);
         $autoID = $row['carId'];
         mysqli_stmt_close($statement);
-        echo "<p>H" . $s1 . "_" . $s2 . "</p>";
-        echo "_" . $autoID . "_" . $fid;
+        //echo "<p>H" . $s1 . "_" . $s2 . "</p>";
+        //echo "_" . $autoID . "_" . $fid;
         // Insert into has table
         $sql = "INSERT INTO has (locationId, carId) VALUES (?, ?)";
         $statement = mysqli_prepare($this->conn, $sql);
@@ -276,5 +281,140 @@ class DatabaseHelper
         mysqli_stmt_close($statement);
 
         return $res;
+    }
+    public function getFid()
+    {
+        $fid = array();
+        $stmt = $this->conn->prepare("SELECT locationId FROM location");
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        while ($row = $result->fetch_assoc()) {
+            $fid[] = $row['locationId'];
+        }
+
+        $stmt->close();
+
+        return $fid;
+    }
+    // getLeasingNR
+    public function getLeasingNR()
+    {
+        $lnr = array();
+        $stmt = $this->conn->prepare("SELECT leasingNr FROM leasing");
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        while ($row = $result->fetch_assoc()) {
+            $lnr[] = $row['leasingNr'];
+        }
+
+        $stmt->close();
+
+        return $lnr;
+    }
+
+    // getAutoId
+    public function getAutoId()
+    {
+        $aid = array();
+        $stmt = $this->conn->prepare("SELECT carId FROM car");
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        while ($row = $result->fetch_assoc()) {
+            $aid[] = $row['carId'];
+        }
+
+        $stmt->close();
+
+        return $aid;
+    }
+    // getMitarbeiterId
+    public function getMitarbeiterId()
+    {
+        $mid = array();
+        $stmt = $this->conn->prepare("SELECT employeeId FROM employee");
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        while ($row = $result->fetch_assoc()) {
+            $mid[] = $row['employeeId'];
+        }
+
+        $stmt->close();
+
+        return $mid;
+    }
+
+    // getFidMid
+    public function getFidMid()
+    {
+        $fidAndMid = array();
+        $stmt = $this->conn->prepare("SELECT locationId, managerId FROM employee");
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        while ($row = $result->fetch_assoc()) {
+            $fidAndMid[$row['locationId']] = $row['managerId'];
+        }
+
+        $stmt->close();
+
+        return $fidAndMid;
+    }
+    // insertIntoVerkauft
+    public function insertIntoVerkauft($mid, $aid, $preis, $date)
+    {
+        $statementString = "INSERT INTO sells(employeeId, carId, price, date) VALUES (?, ?, ?, ?)";
+        try {
+            $prepStmt = $this->conn->prepare($statementString);
+            $prepStmt->bind_param("iids", $mid, $aid, $preis, $date);
+            $prepStmt->execute();
+            $prepStmt->close();
+        } catch (Exception $e) {
+            echo "Error at: insertIntoVerkauft\nmessage: " . $e->getMessage();
+        }
+    }
+
+    // insertIntoHat
+    public function insertIntoHat($fid, $aid)
+    {
+        $statementString = "INSERT INTO has(locationId, carId) VALUES (?, ?)";
+        try {
+            $prepStmt = $this->conn->prepare($statementString);
+            $prepStmt->bind_param("ii", $fid, $aid);
+            $prepStmt->execute();
+            $prepStmt->close();
+        } catch (Exception $e) {
+            echo "Error at: insertIntoHat\nmessage: " . $e->getMessage();
+        }
+    }
+    // insertIntoAutowerkstatt
+    public function insertIntoAutowerkstatt($fid, $telefonnummer, $anz_mit)
+    {
+        $statementString = "INSERT INTO workshop(locationId, phone_number, employee_count) VALUES (?, ?, ?)";
+        try {
+            $prepStmt = $this->conn->prepare($statementString);
+            $prepStmt->bind_param("isi", $fid, $telefonnummer, $anz_mit);
+            $prepStmt->execute();
+            $prepStmt->close();
+        } catch (Exception $e) {
+            echo "Error at: insertIntoAutowerkstatt\nmessage: " . $e->getMessage();
+        }
+    }
+
+    // insertIntoLeasing
+    public function insertIntoLeasing($dauer, $preis)
+    {
+        $statementString = "INSERT INTO leasing(duration, fee) VALUES (?, ?)";
+        try {
+            $prepStmt = $this->conn->prepare($statementString);
+            $prepStmt->bind_param("id", $dauer, $preis);
+            $prepStmt->execute();
+            $prepStmt->close();
+        } catch (Exception $e) {
+            echo "Error at: insertIntoLeasing\nmessage: " . $e->getMessage();
+        }
     }
 }

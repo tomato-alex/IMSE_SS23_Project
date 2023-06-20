@@ -2,6 +2,7 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
+    	System.out.println("based");
         DatabaseHelper helper = new DatabaseHelper();
         DataGenerator dgen = new DataGenerator();
         Random rand = new Random();
