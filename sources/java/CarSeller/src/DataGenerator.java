@@ -103,11 +103,11 @@ public class DataGenerator {
         return cars.size();
     }
 
-    String getMarke(int i) {
+    String getBrand(int i) {
         return cars.get(i).get(0);
     }
 
-    String getModell(int i) {
+    String getModel(int i) {
         return cars.get(i).get(1);
     }
 
