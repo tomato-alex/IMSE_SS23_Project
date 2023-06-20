@@ -73,7 +73,8 @@ SELECT car.brand,
     leasing.fee
 FROM car
     JOIN leasing ON car.leasingNr = leasing.leasingNr;
-/ CREATE VIEW total_sales AS
+
+CREATE VIEW total_sales AS
 SELECT employee.employeeId,
     employee.first_name,
     employee.last_name,

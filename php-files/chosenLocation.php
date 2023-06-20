@@ -67,7 +67,7 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
         <?php foreach ($locationName as $name) : ?>
             <h1 style="color: cadetblue; text-shadow: 5px 3px 7px black;
 -webkit-text-stroke-width: 1px;
-  -webkit-text-stroke-color: steelblue;"><?php echo $name['STADT'] ?></h1>
+  -webkit-text-stroke-color: steelblue;"><?php echo $name['city'] ?></h1>
         <?php endforeach; ?>
     </div>
 
@@ -271,13 +271,13 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
                 </thead>
                 <?php foreach ($sales_array as $sale) : ?>
                     <tr>
-                        <td><?php echo $sale['MID']; ?> </td>
-                        <td><?php echo $sale['VORNAME']; ?> </td>
-                        <td><?php echo $sale['NACHNAME']; ?> </td>
-                        <td><?php echo $sale['MARKE']; ?> </td>
-                        <td><?php echo $sale['MODELL']; ?> </td>
-                        <td><?php echo $sale['DATUM']; ?> </td>
-                        <td><?php echo $sale['SUM'] . " €" ?> </td>
+                        <td><?php echo $sale['employeeId']; ?> </td>
+                        <td><?php echo $sale['first_name']; ?> </td>
+                        <td><?php echo $sale['last_name']; ?> </td>
+                        <td><?php echo $sale['brand']; ?> </td>
+                        <td><?php echo $sale['modell']; ?> </td>
+                        <td><?php echo $sale['date']; ?> </td>
+                        <td><?php echo $sale['sum'] . " €" ?> </td>
                     </tr>
                 <?php endforeach; ?>
             </table>
