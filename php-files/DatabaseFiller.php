@@ -3,98 +3,108 @@
 require_once 'DatabaseHelper.php';
 require_once 'DataGenerator.php';
 
-echo "based\n";
-$helper = new DatabaseHelper();
-$dgen = new DataGenerator();
 
-// Filiale insertion
-for ($i = 0; $i < 10; $i++) {
-    $getter = random_int(0, $dgen->getCitiesAndCountriesSize() - 1);
-    $helper->insertIntoLocation($dgen->getCity($getter), $dgen->getCountry($getter), $dgen->getRandomAddress());
+$helper = new DatabaseHelper();
+$data_generator = new DataGenerator();
+
+// Location insertion
+for ($location = 0; $location < 10; $location++) {
+    $getter = random_int(0, $data_generator->getCitiesAndCountriesSize() - 1);
+    $helper->insertIntoLocation($data_generator->getCity($getter), $data_generator->getCountry($getter), $data_generator->getRandomAddress());
 }
 
-// Autowerkstatt insertion
-$fid = $helper->getFid();
-for ($i = 0; $i < 15; $i++) {
+// Workshop insertion
+$location_id = $helper->getFid();
+for ($workshop = 0; $workshop < 15; $workshop++) {
     $workerCount = random_int(1, 6);
-    $j = 6679220592 + $i;
-    $telefonnummer = "+43" . $j;
-    $random = random_int(0, count($fid) - 1);
-    $helper->insertIntoAutowerkstatt($fid[$random], $telefonnummer, $workerCount);
+    $j = 6679220592 + $workshop;
+    $phone_number = "+43" . $j;
+    $random = random_int(0, count($location_id) - 1);
+    $helper->insertIntoAutowerkstatt($location_id[$random], $phone_number, $workerCount);
 }
 
 // Leasing insertion
-for ($i = 0; $i < 20; $i++) {
-    $dauer = random_int(1, 10);
+for ($leasing = 0; $leasing < 20; $leasing++) {
+    $period = random_int(1, 10);
     $cents = random_int(0, 100) / 100.00;
-    $preis = random_int(30000, 200000) + 30000 + $cents;
-    $helper->insertIntoLeasing($dauer, $preis);
+    $price = random_int(30000, 200000) + 30000 + $cents;
+    $helper->insertIntoLeasing($period, $price);
 }
 
-// Auto insertion
-$lnr = $helper->getLeasingNR();
-for ($i = 0; $i <= 50; $i++) {
-    $random = random_int(0, count($lnr) - 1);
-    $getter = random_int(0, $dgen->getCarsSize());
-    $helper->insertIntoCar($dgen->getMarke($getter), $dgen->getModell($getter), $lnr[$random], $fid[$random]);
+// Car insertion
+$leasing_nr = $helper->getLeasingNR();
+for ($car = 0; $car <= 50; $car++) {
+    $random = random_int(0, count($leasing_nr) - 1);
+    $getter = random_int(0, $data_generator->getCarsSize());
+    $helper->insertIntoCar($data_generator->getMarke($getter), $data_generator->getModell($getter), $leasing_nr[$random], $location_id[$random]);
 }
-$aid = $helper->getAutoId();
-// Mitarbeiter insertion
-for ($i = 0; $i < count($fid); $i++) { // workers without bosses
-    $randomName = random_int(0, $dgen->getFirstNameSize() - 1);
-    $randomSurname = random_int(0, $dgen->getSurnameSize() - 1);
-    $helper->insertIntoEmployee($dgen->getFirstName($randomName), $dgen->getSurname($randomSurname), $fid[$i], null); // in every location/filiale will be one boss
+$car_ids = $helper->getAutoId();
+// Employee insertion
+for ($employee = 0; $employee < count($location_id); $employee++) { // workers without bosses
+    $randomName = random_int(0, $data_generator->getFirstNameSize() - 1);
+    $randomSurname = random_int(0, $data_generator->getSurnameSize() - 1);
+    $helper->insertIntoEmployee($data_generator->getFirstName($randomName), $data_generator->getSurname($randomSurname), $location_id[$employee], null); // in every location/filiale will be one boss
 } {
     $filialAndMitarbeiter = $helper->getFidMid();
-    for ($i = 0; $i < count($fid); $i++) {
+    for ($i = 0; $i < count($location_id); $i++) {
         for ($j = 0; $j < 5; $j++) {
-            $randomName = random_int(0, $dgen->getFirstNameSize() - 1);
-            $randomSurname = random_int(0, $dgen->getSurnameSize() - 1);
-            $helper->insertIntoEmployee($dgen->getFirstName($randomName), $dgen->getSurname($randomSurname), $fid[$i], $filialAndMitarbeiter[$i]);
+            $randomName = random_int(0, $data_generator->getFirstNameSize() - 1);
+            $randomSurname = random_int(0, $data_generator->getSurnameSize() - 1);
+            $helper->insertIntoEmployee($data_generator->getFirstName($randomName), $data_generator->getSurname($randomSurname), $location_id[$i], $filialAndMitarbeiter[$i]);
         }
     }
 }
 
-// hat insert
+// has insert
 $numbers = array();
 foreach ($helper->getFid() as $i => $value) {
     $numbers = array();
     for ($j = 0; $j <= 30; $j++) {
-        $random = random_int(0, count($aid) - 1);
+        $random = random_int(0, count($car_ids) - 1);
         while (in_array($random, $numbers)) {
-            $random = random_int(0, count($aid) - 1);
+            $random = random_int(0, count($car_ids) - 1);
         }
         $numbers[] = $random;
-        $helper->insertIntoHat($fid[$i], $aid[$random]);
+        $helper->insertIntoHat($location_id[$i], $car_ids[$random]);
     }
 }
 
-// Verkauft insert
-$mid = $helper->getMitarbeiterId();
+// sells insert
+$employee_ids = $helper->getMitarbeiterId();
 $usedNumbers = array();
 for ($i = 0; $i < 500; $i++) {
-    $preis = (random_int(20000, 200000)) * 100 / 100.00;
-    $randomMitarbeiter = random_int(0, count($mid) - 1);
-    $randomAuto = random_int(0, count($aid) - 1);
-    while (in_array($randomAuto, $usedNumbers)) {
-        $randomAuto = random_int(0, count($aid) - 1);
-    }
-    $usedNumbers[] = $randomAuto;
+    $price = (random_int(20000, 200000)) * 100 / 100.00;
+    $random_employee = random_int(0, count($employee_ids) - 1);
+    $random_car = random_int(0, count($car_ids) - 1);
+//    while (in_array($random_car, $usedNumbers)) {
+//        $random_car = random_int(0, count($car_ids) - 1);
+//    }
+
+    $usedNumbers[] = $random_car;
     $date = (random_int(2012, 2022)) . "-" . (random_int(1, 12)) . "-" . (random_int(1, 28));
-    $helper->insertIntoVerkauft($mid[$randomMitarbeiter], $aid[$randomAuto], $preis, $date);
+    $helper->insertIntoVerkauft($employee_ids[$random_employee], $car_ids[$random_car], $price, $date);
 }
 ?>
 <!DOCTYPE html>
 <html>
-
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="style.css">
 <head>
     <title>Database Filler</title>
 </head>
 
 <body>
+    <p class='phpecho'> The Database has been filled! 🍺🍺🍺 </p>
     <!-- Your database filler content goes here -->
+    <div style="
+    width: 8%;
+    margin: auto;
+    align-items: center">
+        <a  href="index.php">
 
-    <a href="index.php"><button>Go Back</button></a>
+            <button class="button2"> Go Back</button>
+        </a>
+    </div>
 </body>
 
 </html>

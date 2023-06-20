@@ -208,7 +208,7 @@ padding-top: 0;">
         </div>
     </div>
     <a href="databaseFiller.php" class="floating-button" onclick="showSpinner()">Fill DB</a>
-    <a href=" databaseFiller.php" class="floating-button" style="bottom: 90px" onclick="showSpinner()">Delete all</a>
+    <a href="Drop.php" class="floating-button" style="bottom: 90px" onclick="showSpinner()">Delete all</a>
     <div class=" input-wrapper">
         <input type="text" id="inputField" placeholder="Enter role">
         <button onclick="showDivs()">Login</button>
