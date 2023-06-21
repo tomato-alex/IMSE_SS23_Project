@@ -124,7 +124,7 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
     <br>
     <br>
     <!-- New Sale -->
-    <div class="form" id="noadmin">
+    <div class="form" id="noadmin" style="box-shadow: 7px 7px #87d9fa">
         <h3>New Sale: </h3>
 
         <form method="post" action="addSale.php" onsubmit="return validateFormSales()">
@@ -174,7 +174,7 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
 
     <!-- Add Car -->
     <div class="next2" style="display:flex; justify-content: space-between;">
-        <div class="form">
+        <div class="form" style="box-shadow: 7px 7px #87d9fa">
             <h3>Add Car: </h3>
 
             <form method="post" action="addCar.php">
@@ -212,7 +212,7 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
             </form>
         </div>
 
-        <div class="form">
+        <div class="form" style="box-shadow: 7px 7px #87d9fa">
             <!-- Delete Car -->
             <h3>Delete Car: </h3>
             <form method="post" action="delCar.php">
@@ -234,7 +234,7 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
     <br>
     <!-- Add Employee -->
     <div class="next2" style="display:none; justify-content: space-between;" id="noemployee">
-        <div class="form">
+        <div class="form" style="box-shadow: 7px 7px #87d9fa">
             <h3>Add Employee: </h3>
 
             <form method="post" action="addEmployee.php" onsubmit="return validateForm()">
@@ -291,7 +291,7 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
             </script>
         </div>
 
-        <div class="form">
+        <div class="form" style="box-shadow: 7px 7px #87d9fa">
             <!-- Delete Employee -->
             <h3>Delete Employee: </h3>
             <form method="post" action="delEmployee.php">
