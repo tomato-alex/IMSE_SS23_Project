@@ -10,11 +10,11 @@ $login = '';
 if (isset($_POST['login'])) {
     $login = $_POST['login'];
 
-    $id = '';
+    $empid = '';
     if (preg_match('/^(\d+)([A-Za-z]+)$/', $login, $matches)) {
-        $id = $matches[1];
+        $empid = $matches[1];
     }
-    echo '<script>console.log("Login:", "' . $login . '_' . $id . '")</script>';
+    echo '<script>console.log("Login:", "' . $login . '_' . $empid . '")</script>';
 }
 
 $id = '';
@@ -63,6 +63,7 @@ $sales = $database->selectSales($_SESSION["id"]);
 $locationName = $database->getLocationName($_SESSION["id"]);
 $employee_array = $database->selectEmployeesFromLocation($_SESSION["id"]);
 $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasingNr, $_SESSION["id"]);
+$cheapest_cars = $database->selectCheapest($_SESSION["id"]);
 ?>
 <html>
 
@@ -104,6 +105,30 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
                     <td><?php echo $car['brand']; ?> </td>
                     <td><?php echo $car['modell']; ?> </td>
                     <td><?php echo $car['leasingNr']; ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    </div>
+    <h2>Budget Friendly Options:</h2>
+
+    <div class="tableContainer">
+        <table class="table">
+            <thead class="head">
+                <tr>
+                    <th class="col">ID</th>
+                    <th class="col">Brand</th>
+                    <th class="col">Model</th>
+                    <th class="col4">Leasing Number</th>
+                    <th class="col">Cost</th>
+                </tr>
+            </thead>
+            <?php foreach ($cheapest_cars as $car) : ?>
+                <tr>
+                    <td><?php echo $car['carId']; ?> </td>
+                    <td><?php echo $car['brand']; ?> </td>
+                    <td><?php echo $car['modell']; ?> </td>
+                    <td><?php echo $car['leasingNr']; ?></td>
+                    <td><?php echo $car['MonthlyFee']; ?></td>
                 </tr>
             <?php endforeach; ?>
         </table>
@@ -344,7 +369,7 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
             </table>
             <!-- Employee id textbox -->
             <input type="hidden" name="login" value="<?php echo $login; ?>">
-            <input id="employeeId" name="employeeId" type="hidden" value="<?php echo $id ?>">
+            <input id="employeeId" name="employeeId" type="hidden" value="<?php echo $empid ?>">
             <!-- Submit button -->
             <div style="margin: auto;width: 18%;padding: 20px;">
                 <input type="submit" name="button" value="Add Sale">

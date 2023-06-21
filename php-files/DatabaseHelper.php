@@ -448,4 +448,17 @@ class DatabaseHelper
             echo "Error at: insertIntoLeasing\nmessage: " . $e->getMessage();
         }
     }
+
+    public function selectCheapest($locId)
+    {
+        $sql = "SELECT * from cheapest_leasing_options where locationId = ? limit 10";
+        $statement = mysqli_prepare($this->conn, $sql);
+        mysqli_stmt_bind_param($statement, 'i', $locId);
+        mysqli_stmt_execute($statement);
+        $result = mysqli_stmt_get_result($statement);
+        $res = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        mysqli_stmt_close($statement);
+
+        return $res;
+    }
 }

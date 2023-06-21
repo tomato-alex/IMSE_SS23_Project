@@ -92,3 +92,12 @@ GROUP BY employee.employeeId,
     sells.date
 HAVING SUM(price) > 100000
 ORDER BY SUM(price) DESC;
+CREATE VIEW cheapest_leasing_options AS
+SELECT c.*,
+    l.fee AS MonthlyFee,
+    loc.locationId
+FROM car AS c
+    JOIN leasing AS l ON c.leasingNr = l.leasingNr
+    JOIN has AS h ON c.carId = h.carId
+    JOIN locations AS loc ON h.locationId = loc.locationId
+ORDER BY l.fee;
