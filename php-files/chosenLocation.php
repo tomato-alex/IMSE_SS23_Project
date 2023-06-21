@@ -9,7 +9,12 @@ $database = new DatabaseHelper();
 $login = '';
 if (isset($_POST['login'])) {
     $login = $_POST['login'];
-    echo '<script>console.log("Login:", "' . $login . '")</script>';
+
+    $id = '';
+    if (preg_match('/^(\d+)([A-Za-z]+)$/', $login, $matches)) {
+        $id = $matches[1];
+    }
+    echo '<script>console.log("Login:", "' . $login . '_' . $id . '")</script>';
 }
 
 $id = '';
@@ -257,9 +262,9 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
     <br>
     <br>
 
-    <h3 style="font-size: 45px; margin-right:850px"">Our Staff Members:</h2>
+    <h3 style="font-size: 45px; margin-right:850px">Our Staff Members:</h3>
 
-<div style=" padding: 0px; height: 250px; width: 450px; overflow: hidden; overflow-y: auto; border-radius: 15px; margin-left: auto; margin-right: auto; border: 1px solid;">
+    <div style=" padding: 0px; height: 250px; width: 450px; overflow: hidden; overflow-y: auto; border-radius: 15px; margin-left: auto; margin-right: auto; border: 1px solid;">
         <table class="table">
             <thead class="head1">
                 <tr>
@@ -276,44 +281,44 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
                 </tr>
             <?php endforeach; ?>
         </table>
-        </div>
+    </div>
 
 
-        <?php $sales_array = $database->selectSales($_SESSION["id"]); ?>
-        <h3 style="font-size: 45px; margin-right:850px">Sales:</h3>
+    <?php $sales_array = $database->selectSales($_SESSION["id"]); ?>
+    <h3 style="font-size: 45px; margin-right:850px">Sales:</h3>
 
-        <div style="padding: 0px;
+    <div style="padding: 0px;
     height: 300px;
     width: 850px;
     overflow: hidden;
     overflow-y: auto;
     margin-left: auto;
     margin-right: auto;">
-            <table class="table">
-                <thead class="head">
-                    <tr>
-                        <th class="col">MID</th>
-                        <th class="col">Name</th>
-                        <th class="col">Surname</th>
-                        <th class="col">Brand</th>
-                        <th class="col">Model</th>
-                        <th class="col">Date</th>
-                        <th class="col">Price</th>
-                    </tr>
-                </thead>
-                <?php foreach ($sales_array as $sale) : ?>
-                    <tr>
-                        <td><?php echo $sale['employeeId']; ?> </td>
-                        <td><?php echo $sale['first_name']; ?> </td>
-                        <td><?php echo $sale['last_name']; ?> </td>
-                        <td><?php echo $sale['brand']; ?> </td>
-                        <td><?php echo $sale['modell']; ?> </td>
-                        <td><?php echo $sale['date']; ?> </td>
-                        <td><?php echo $sale['sum'] . " €" ?> </td>
-                    </tr>
-                <?php endforeach; ?>
-            </table>
-        </div>
+        <table class="table">
+            <thead class="head">
+                <tr>
+                    <th class="col">MID</th>
+                    <th class="col">Name</th>
+                    <th class="col">Surname</th>
+                    <th class="col">Brand</th>
+                    <th class="col">Model</th>
+                    <th class="col">Date</th>
+                    <th class="col">Price</th>
+                </tr>
+            </thead>
+            <?php foreach ($sales_array as $sale) : ?>
+                <tr>
+                    <td><?php echo $sale['employeeId']; ?> </td>
+                    <td><?php echo $sale['first_name']; ?> </td>
+                    <td><?php echo $sale['last_name']; ?> </td>
+                    <td><?php echo $sale['brand']; ?> </td>
+                    <td><?php echo $sale['modell']; ?> </td>
+                    <td><?php echo $sale['date']; ?> </td>
+                    <td><?php echo $sale['sum'] . " €" ?> </td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    </div>
 
 
     <br>
@@ -329,39 +334,24 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
                 <!-- Employee id textbox -->
                 <tr class="spaceunder">
                     <td><label for="employeeId">Employee Id:</label></td>
-                    <td><input id="employeeId" name="employeeId" type="text" maxlength="20"></td>
+                    <td><input id="employeeId" name="employeeId" type="text" maxlength="20" value="<?php echo $id ?>"></td>
                 </tr>
-                <br>
-
                 <!-- Car Id textbox -->
                 <tr class="spaceunder">
                     <td><label for="carId">Car Id:</label></td>
                     <td><input id="carId" name="carId" type="text" maxlength="20"></td>
                 </tr>
-                <br>
 
                 <!-- Price textbox -->
                 <tr class="spaceunder">
                     <td><label for="price">Price:</label></td>
                     <td><input id="price" name="price" type="text" maxlength="20"></td>
                 </tr>
-                <br>
-
-
-                <!-- Submit button -->
-                <div style="margin: auto;width: 18%;padding: 20px;">
-                    <input type="submit" name="button" value="Add Employee">
-                </div>
-
-
+            </table>
             <!-- Submit button -->
-            <div style="margin: auto;
-                width: 18%;
-                padding: 20px;">
-                <input type="submit" name="button" value="Add Employee">
-
+            <div style="margin: auto;width: 18%;padding: 20px;">
+                <input type="submit" name="button" value="Add Sale">
             </div>
-
         </form>
 
         <script>
@@ -369,7 +359,7 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
                 var employeeInput = parseInt(document.getElementById("employeeId").value.trim(), 10);
                 var carInput = parseInt(document.getElementById("carId").value.trim(), 10);
 
-                var sales = <?php echo json_encode(array_map('strval',$sales)); ?>;
+                var sales = <?php echo json_encode(array_map('strval', $sales)); ?>;
 
                 for (var i = 0; i < sales.length; i++) {
                     var sale = sales[i];
@@ -387,15 +377,13 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
         </script>
     </div>
 
-
-        <!-- link back to index page-->
-        <br>
-        <div style="width: 8%;margin: auto;align-items: center">
-            <form method="post" action="index.php">
-                <input type="hidden" name="login" value="<?php echo $login; ?>">
-                <button type="submit" class="button2">Go back</button>
-            </form>
-        </div>
+    <!-- link back to index page-->
+    <div style="width: 8%;margin: auto;align-items: center">
+        <form method="post" action="index.php">
+            <input type="hidden" name="login" value="<?php echo $login; ?>">
+            <button type="submit" class="button2">Go back</button>
+        </form>
+    </div>
 
 </body>
 
