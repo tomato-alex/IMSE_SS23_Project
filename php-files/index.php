@@ -6,6 +6,7 @@ $database = new DatabaseHelper();
 $login = '';
 if (isset($_POST['login'])) {
     $login = $_POST['login'];
+    echo '<script>console.log("Login:", "' . $login . '")</script>';
     if ($login === 'admin') {
         echo '<script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -231,7 +232,7 @@ padding-top: 0;">
             <div></div>
         </div>
     </div>
-
+    <!-- Input wrapper -->
     <div class=" input-wrapper">
         <form method="POST" action="index.php">
             <input type="text" name="login" placeholder="Enter login">
@@ -244,7 +245,7 @@ padding-top: 0;">
         </form>
     </div>
     <br>
-
+    <!--Location table-->
     <h2>Our Locations:</h2>
     <div class="tableContainer">
         <table class="table">
@@ -344,18 +345,11 @@ padding-top: 0;">
                             <td><label for="new_name">ID:</label></td>
                             <td><input id="new_name" name="id" type="text" maxlength="20"></td>
                         </tr>
-                        <br>
-
                     </table>
-                    <br>
-
+                    <input type="hidden" name="login" value="<?php echo $login; ?>">
                     <!-- Submit button -->
-                    <div style="margin: auto;
-            width: 18%;
-            padding: 20px;">
-                        <button type="submit">
-                            Choose
-                        </button>
+                    <div style="margin: auto; width: 18%; padding: 20px;">
+                        <button type="submit">Choose</button>
                     </div>
                 </form>
             </div>
@@ -366,7 +360,6 @@ padding-top: 0;">
 
                     // Array of valid IDs
                     var validIds = <?php echo json_encode(array_map('strval', $database->getFid())); ?>;
-
                     if (!validIds.includes(inputId)) {
                         alert("Invalid ID! Please enter a valid ID.");
                         return false; // Prevent form submission
