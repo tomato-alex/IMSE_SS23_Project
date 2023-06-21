@@ -9,7 +9,14 @@ $database = new DatabaseHelper();
 $login = '';
 if (isset($_POST['login'])) {
     $login = $_POST['login'];
-
+    if ($login === 'admin') {
+        echo '<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var adminDiv = document.getElementById("noadmin");
+            adminDiv.style.display = "none";
+          });
+        </script>';
+    }
     $empid = '';
     if (preg_match('/^(\d+)([A-Za-z]+)$/', $login, $matches)) {
         $empid = $matches[1];
@@ -63,7 +70,6 @@ $sales = $database->selectSales($_SESSION["id"]);
 $locationName = $database->getLocationName($_SESSION["id"]);
 $employee_array = $database->selectEmployeesFromLocation($_SESSION["id"]);
 $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasingNr, $_SESSION["id"]);
-$cheapest_cars = $database->selectCheapest($_SESSION["id"]);
 ?>
 <html>
 
@@ -86,7 +92,12 @@ $cheapest_cars = $database->selectCheapest($_SESSION["id"]);
 
 
     <br>
-
+    <div style="width: 8%;margin: auto;align-items: center">
+        <form method="post" action="index.php">
+            <input type="hidden" name="login" value="<?php echo $login; ?>">
+            <button type="submit" class="button2">Go back</button>
+        </form>
+    </div>
     <h2>Available Cars:</h2>
 
     <div class="tableContainer">
@@ -105,30 +116,6 @@ $cheapest_cars = $database->selectCheapest($_SESSION["id"]);
                     <td><?php echo $car['brand']; ?> </td>
                     <td><?php echo $car['modell']; ?> </td>
                     <td><?php echo $car['leasingNr']; ?></td>
-                </tr>
-            <?php endforeach; ?>
-        </table>
-    </div>
-    <h2>Budget Friendly Options:</h2>
-
-    <div class="tableContainer">
-        <table class="table">
-            <thead class="head">
-                <tr>
-                    <th class="col">ID</th>
-                    <th class="col">Brand</th>
-                    <th class="col">Model</th>
-                    <th class="col4">Leasing Number</th>
-                    <th class="col">Cost</th>
-                </tr>
-            </thead>
-            <?php foreach ($cheapest_cars as $car) : ?>
-                <tr>
-                    <td><?php echo $car['carId']; ?> </td>
-                    <td><?php echo $car['brand']; ?> </td>
-                    <td><?php echo $car['modell']; ?> </td>
-                    <td><?php echo $car['leasingNr']; ?></td>
-                    <td><?php echo $car['MonthlyFee']; ?></td>
                 </tr>
             <?php endforeach; ?>
         </table>
@@ -287,7 +274,7 @@ $cheapest_cars = $database->selectCheapest($_SESSION["id"]);
     <br>
     <br>
 
-    <h3 style="font-size: 45px; margin-right:850px">Our Staff Members:</h3>
+    <h3 style="font-size: 45px; text-align: left;">Our Staff Members:</h3>
 
     <div style=" padding: 0px; height: 250px; width: 450px; overflow: hidden; overflow-y: auto; border-radius: 15px; margin-left: auto; margin-right: auto; border: 1px solid;">
         <table class="table">
@@ -308,10 +295,47 @@ $cheapest_cars = $database->selectCheapest($_SESSION["id"]);
         </table>
     </div>
 
-
+    <?php echo "<script>console.log('" . $_SESSION["id"] . "')</script>" ?>
     <?php $sales_array = $database->selectSales($_SESSION["id"]); ?>
-    <h3 style="font-size: 45px; margin-right:850px">Sales:</h3>
+    <?php $sales_2 = $database->selectSells($_SESSION["id"]); ?>
+    <h3 style="font-size: 45px; text-align: left;">Sales:</h3>
     <!--Sales-->
+
+    <div style="padding: 0px;
+    height: 300px;
+    width: 850px;
+    overflow: hidden;
+    overflow-y: auto;
+    margin-left: auto;
+    margin-right: auto;">
+
+        <table class="table">
+            <thead class="head">
+                <tr>
+                    <th class="col">MID</th>
+                    <th class="col">Name</th>
+                    <th class="col">Surname</th>
+                    <th class="col">Brand</th>
+                    <th class="col">Model</th>
+                    <th class="col">Price</th>
+                    <th class="col">Date</th>
+                </tr>
+            </thead>
+            <?php foreach ($sales_2 as $sale) : ?>
+                <tr>
+                    <td><?php echo $sale['employeeId']; ?> </td>
+                    <td><?php echo $sale['first_name']; ?> </td>
+                    <td><?php echo $sale['last_name']; ?> </td>
+                    <td><?php echo $sale['brand']; ?> </td>
+                    <td><?php echo $sale['modell']; ?> </td>
+                    <td><?php echo $sale['price'] . " €"; ?> </td>
+                    <td><?php echo $sale['dare']; ?> </td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    </div>
+    <br>
+    <h3 style="font-size: 45px; text-align: left;">Employee Performance:</h3>
     <div style="padding: 0px;
     height: 300px;
     width: 850px;
@@ -325,9 +349,7 @@ $cheapest_cars = $database->selectCheapest($_SESSION["id"]);
                     <th class="col">MID</th>
                     <th class="col">Name</th>
                     <th class="col">Surname</th>
-                    <th class="col">Brand</th>
-                    <th class="col">Model</th>
-                    <th class="col">Date</th>
+                    <th class="col">Sold</th>
                     <th class="col">Price</th>
                 </tr>
             </thead>
@@ -336,10 +358,8 @@ $cheapest_cars = $database->selectCheapest($_SESSION["id"]);
                     <td><?php echo $sale['employeeId']; ?> </td>
                     <td><?php echo $sale['first_name']; ?> </td>
                     <td><?php echo $sale['last_name']; ?> </td>
-                    <td><?php echo $sale['brand']; ?> </td>
-                    <td><?php echo $sale['modell']; ?> </td>
-                    <td><?php echo $sale['date']; ?> </td>
-                    <td><?php echo $sale['sum'] . " €" ?> </td>
+                    <td><?php echo $sale['sold']; ?> </td>
+                    <td><?php echo $sale['total_sum'] . " €" ?> </td>
                 </tr>
             <?php endforeach; ?>
         </table>
@@ -349,7 +369,7 @@ $cheapest_cars = $database->selectCheapest($_SESSION["id"]);
     <br>
     <br>
     <!-- New Sale -->
-    <div class="form">
+    <div class="form" id="noadmin">
         <h3>New Sale: </h3>
 
         <form method="post" action="addSale.php" onsubmit="return validateFormSales()">

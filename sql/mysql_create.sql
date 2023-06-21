@@ -77,27 +77,24 @@ CREATE VIEW total_sales AS
 SELECT employee.employeeId,
     employee.first_name,
     employee.last_name,
-    car.brand,
-    car.modell,
-    sells.date,
-    SUM(price) sum
+    COUNT(car.carId) sold,
+    SUM(price) total_sum
 FROM sells
     JOIN employee ON employee.employeeId = sells.employeeId
     JOIN car ON car.carId = sells.carId
-GROUP BY employee.employeeId,
-    employee.first_name,
-    employee.last_name,
-    car.brand,
-    car.modell,
-    sells.date
-HAVING SUM(price) > 100000
-ORDER BY SUM(price) DESC;
+GROUP BY employee.employeeId;
 CREATE VIEW cheapest_leasing_options AS
 SELECT c.*,
     l.fee AS MonthlyFee,
-    loc.locationId
+    loc.locationId,
+    loc.country
 FROM car AS c
-    JOIN leasing AS l ON c.leasingNr = l.leasingNr
-    JOIN has AS h ON c.carId = h.carId
-    JOIN locations AS loc ON h.locationId = loc.locationId
+    LEFT JOIN leasing AS l ON c.leasingNr = l.leasingNr
+    LEFT JOIN has AS h ON c.carId = h.carId
+    LEFT JOIN locations AS loc ON h.locationId = loc.locationId
+where c.carId not in (
+        select s.carId
+        from sells s
+    )
+    and c.brand is not null
 ORDER BY l.fee;

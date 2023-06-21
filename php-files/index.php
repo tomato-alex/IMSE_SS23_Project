@@ -46,6 +46,29 @@ if (isset($_GET['stadt'])) {
 $land = '';
 if (isset($_GET['land'])) {
     $land = $_GET['land'];
+    echo "<script>console.log('" . $land . "');</script>";
+    $cheapest_cars = $database->selectCheapest($land);
+    if ($land === '') {
+        echo '<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var cheapest = document.getElementById("cheapest");
+            var cheapest2 = document.getElementById("cheapest2");
+
+            cheapest.style.display = "none";
+            cheapest2.style.display = "none";
+        });
+        </script>';
+    } else {
+        echo '<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var cheapest = document.getElementById("cheapest");
+            var cheapest2 = document.getElementById("cheapest2");
+
+            cheapest.style.display = "block";
+            cheapest2.style.display = "block";
+        });
+        </script>';
+    }
 }
 
 $adresse = '';
@@ -270,7 +293,30 @@ padding-top: 0;">
     <br>
     <br>
 
+    <h2 class="container" id="cheapest2">Budget Friendly Options:</h2>
+    <div class="container" id="cheapest">
 
+        <div class="tableContainer">
+            <table class="table">
+                <thead class="head">
+                    <tr>
+                        <th class="col">Brand</th>
+                        <th class="col">Model</th>
+                        <th class="col4">Leasing Number</th>
+                        <th class="col">Cost</th>
+                    </tr>
+                </thead>
+                <?php foreach ($cheapest_cars as $car) : ?>
+                    <tr>
+                        <td><?php echo $car['brand']; ?> </td>
+                        <td><?php echo $car['modell']; ?> </td>
+                        <td><?php echo $car['leasingNr']; ?></td>
+                        <td><?php echo $car['MonthlyFee']; ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </table>
+        </div>
+    </div>
     <div class="flex-container">
 
         <div class="form">

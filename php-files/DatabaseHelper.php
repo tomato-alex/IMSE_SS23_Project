@@ -162,7 +162,7 @@ class DatabaseHelper
 
     public function selectSales($fid)
     {
-        $sql = "SELECT * FROM total_sales WHERE employeeId IN (SELECT employeeId FROM employee WHERE locationId = ?) ORDER BY sum desc";
+        $sql = "SELECT * FROM total_sales WHERE employeeId IN (SELECT employeeId FROM employee WHERE locationId = ?) order by total_sum asc";
 
         $statement = mysqli_prepare($this->conn, $sql);
         mysqli_stmt_bind_param($statement, 's', $fid);
@@ -174,6 +174,20 @@ class DatabaseHelper
         return $res;
     }
 
+    public function selectSells($location)
+    {
+        $sql = "SELECT e.employeeId, e.first_name, e.last_name, c.brand, c.modell, s.price, s.date
+                from sells as s left join employee as e on s.employeeId = e.employeeId left join car as c on c.carId = s.carId where locationId = ?";
+
+        $statement = mysqli_prepare($this->conn, $sql);
+        mysqli_stmt_bind_param($statement, 'i', $location);
+        mysqli_stmt_execute($statement);
+        $result = mysqli_stmt_get_result($statement);
+        $res = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        mysqli_stmt_close($statement);
+
+        return $res;
+    }
 
     // This function creates and executes a SQL insert statement and returns true or false
     public function insertIntoLocation($stadt, $land, $adresse)
@@ -451,9 +465,9 @@ class DatabaseHelper
 
     public function selectCheapest($locId)
     {
-        $sql = "SELECT * from cheapest_leasing_options where locationId = ? limit 10";
+        $sql = "SELECT * from cheapest_leasing_options where country = ? limit 10";
         $statement = mysqli_prepare($this->conn, $sql);
-        mysqli_stmt_bind_param($statement, 'i', $locId);
+        mysqli_stmt_bind_param($statement, 's', $locId);
         mysqli_stmt_execute($statement);
         $result = mysqli_stmt_get_result($statement);
         $res = mysqli_fetch_all($result, MYSQLI_ASSOC);
