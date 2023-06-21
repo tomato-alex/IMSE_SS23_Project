@@ -128,7 +128,7 @@ class DatabaseHelper
           AND upper(brand) LIKE upper('%{$marke}%')
           AND upper(modell) LIKE upper('%{$modell}%')
           AND leasingNr LIKE '%{$lnr}%'
-          ORDER BY brand ASC";
+          ORDER BY carId ASC";
 
         $statement = mysqli_query($this->conn, $sql);
 
@@ -161,7 +161,7 @@ class DatabaseHelper
 
     public function selectSales($fid)
     {
-        $sql = "SELECT * FROM total_sales WHERE employeeId IN (SELECT employeeId FROM employee WHERE locationId = ?)";
+        $sql = "SELECT * FROM total_sales WHERE employeeId IN (SELECT employeeId FROM employee WHERE locationId = ?) ORDER BY sum desc";
 
         $statement = mysqli_prepare($this->conn, $sql);
         mysqli_stmt_bind_param($statement, 's', $fid);
@@ -397,14 +397,14 @@ class DatabaseHelper
     // insertIntoVerkauft
     public function insertIntoVerkauft($mid, $aid, $preis, $date)
     {
-        echo "<p>".$mid.$aid.$preis.$date."</p>";
+        echo "<p>" . $mid . $aid . $preis . $date . "</p>";
         $sql = "INSERT INTO sells(employeeId, carId, price, date) VALUES (?, ?, ?, ?)";
-            $statement = mysqli_prepare($this->conn, $sql);
-            mysqli_stmt_bind_param($statement,"iids", $mid, $aid, $preis, $date);
-            $success = mysqli_stmt_execute($statement);
-            mysqli_stmt_close($statement);
+        $statement = mysqli_prepare($this->conn, $sql);
+        mysqli_stmt_bind_param($statement, "iids", $mid, $aid, $preis, $date);
+        $success = mysqli_stmt_execute($statement);
+        mysqli_stmt_close($statement);
 
-            return $success;
+        return $success;
     }
 
     // insertIntoHat

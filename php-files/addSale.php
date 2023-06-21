@@ -4,7 +4,10 @@ session_start();
 require_once('DatabaseHelper.php');
 
 $database = new DatabaseHelper();
-
+$login = '';
+if (isset($_POST['login'])) {
+    $login = $_POST['login'];
+}
 $carId = '';
 if (isset($_POST['carId'])) {
     $carId = $_POST['carId'];
@@ -13,6 +16,7 @@ if (isset($_POST['carId'])) {
 $employeeId = '';
 if (isset($_POST['employeeId'])) {
     $employeeId = $_POST['employeeId'];
+    echo '<script>console.log("Login:", "' . $employeeId . '")</script>';
 }
 
 $price = '';
@@ -43,7 +47,11 @@ if ($success) {
     width: 8%;
     margin: auto;
     align-items: center">
-    <a href="chosenLocation.php">
-        <button class="button2"> go back</button>
-    </a>
+
+    <div style="width: 8%;margin: auto;align-items: center">
+        <form method="post" action="chosenLocation.php">
+            <input type="hidden" name="login" value="<?php echo $login; ?>">
+            <button type="submit" class="button2">Go back</button>
+        </form>
+    </div>
 </div>
