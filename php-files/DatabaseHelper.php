@@ -27,10 +27,10 @@ class DatabaseHelper
 
             // Check if the connection object is not null
             if (!$this->conn) {
-                $this->tablesCreated = false;
-                echo "<script>console.log('" . $this->conn . "');</script>";
-                //die("DB error: Connection can't be established!");
-                $this->conn = mysqli_connect(
+                //$this->tablesCreated = false;
+                //echo "<script>console.log('" . $this->conn . "');</script>";
+                die("DB error: Connection can't be established!");
+                /*$this->conn = mysqli_connect(
                     DatabaseHelper::host,
                     DatabaseHelper::username,
                     DatabaseHelper::password,
@@ -48,11 +48,7 @@ class DatabaseHelper
                     die("DB error: Failed to read the create script.");
                 }
                 mysqli_select_db($this->conn, DatabaseHelper::database);
-                $this->createTables();
-            } else {
-                if ($this->areTablesCreated() === false) {
-                    $this->createTables();
-                }
+                $this->createTables();*/
             }
         } catch (Exception $e) {
             die("DB error: {$e->getMessage()}");
