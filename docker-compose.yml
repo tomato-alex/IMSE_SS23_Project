@@ -10,7 +10,7 @@ services:
       - MYSQL_DATABASE=imse_23_ss
     volumes:
       - ./sql/mysql_create.sql:/docker-entrypoint-initdb.d/2_mysql_create.sql
-      - ./sql/drop.sql:/docker-entrypoint-initdb.d/1_drop.sql
+    #  - ./sql/drop.sql:/docker-entrypoint-initdb.d/1_drop.sql
     #  - ./sql/entrypoint.sh:/entrypoint.sh
     ports:
       - 3308:3306
