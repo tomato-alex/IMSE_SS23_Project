@@ -76,9 +76,9 @@ for ($i = 0; $i < 500; $i++) {
     $price = (random_int(20000, 200000)) * 100 / 100.00;
     $random_employee = random_int(0, count($employee_ids) - 1);
     $random_car = random_int(0, count($car_ids) - 1);
-//    while (in_array($random_car, $usedNumbers)) {
-//        $random_car = random_int(0, count($car_ids) - 1);
-//    }
+    //    while (in_array($random_car, $usedNumbers)) {
+    //        $random_car = random_int(0, count($car_ids) - 1);
+    //    }
 
     $usedNumbers[] = $random_car;
     $date = (random_int(2012, 2022)) . "-" . (random_int(1, 12)) . "-" . (random_int(1, 28));
@@ -89,18 +89,18 @@ for ($i = 0; $i < 500; $i++) {
 <html>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link rel="stylesheet" href="style.css">
+
 <head>
     <title>Database Filler</title>
 </head>
 
 <body>
     <p class='phpecho'> The Database has been filled! 🍺🍺🍺 </p>
-    <!-- Your database filler content goes here -->
     <div style="
     width: 8%;
     margin: auto;
     align-items: center">
-        <a  href="index.php">
+        <a href="index.php">
 
             <button class="button2"> Go Back</button>
         </a>

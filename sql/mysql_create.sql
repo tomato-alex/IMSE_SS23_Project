@@ -13,7 +13,7 @@ CREATE TABLE workshop(
     employee_count integer DEFAULT 3,
     UNIQUE(phone_number),
     PRIMARY KEY (locationId, workshopId),
-    FOREIGN KEY (locationId) REFERENCES location(locationId) ON DELETE CASCADE
+    FOREIGN KEY (locationId) REFERENCES locations(locationId) ON DELETE CASCADE
 );
 CREATE TABLE leasing(
     leasingNr integer AUTO_INCREMENT,
@@ -43,7 +43,7 @@ CREATE TABLE employee(
     locationId integer,
     managerId integer DEFAULT NULL,
     PRIMARY KEY(employeeId),
-    FOREIGN KEY (locationId) REFERENCES location (locationId) ON DELETE
+    FOREIGN KEY (locationId) REFERENCES locations (locationId) ON DELETE
     SET NULL,
         FOREIGN KEY (managerId) REFERENCES employee (employeeId) ON DELETE
     SET NULL
@@ -62,7 +62,7 @@ CREATE TABLE has(
     locationId integer,
     carId integer,
     PRIMARY KEY(locationId, carId),
-    FOREIGN KEY (locationId) REFERENCES location(locationId) ON DELETE CASCADE,
+    FOREIGN KEY (locationId) REFERENCES locations(locationId) ON DELETE CASCADE,
     FOREIGN KEY (carId) REFERENCES car(carId) ON DELETE CASCADE
 );
 -- VIEWS
@@ -73,7 +73,6 @@ SELECT car.brand,
     leasing.fee
 FROM car
     JOIN leasing ON car.leasingNr = leasing.leasingNr;
-
 CREATE VIEW total_sales AS
 SELECT employee.employeeId,
     employee.first_name,

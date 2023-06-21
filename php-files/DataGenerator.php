@@ -1,6 +1,7 @@
 <?php
 
-class DataGenerator {
+class DataGenerator
+{
     private $firstNames = [
         "John", "Emma", "Michael", "Sophia", "Robert", "Olivia", "David", "Ava", "William", "Mia"
     ];
@@ -33,64 +34,77 @@ class DataGenerator {
         "Japan" => "Tokyo"
     ];
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->fillAddresses();
     }
 
-    private function fillAddresses() {
+    private function fillAddresses()
+    {
         for ($i = 1; $i <= 100; $i++) {
             $this->addresses[] = "Address " . $i;
         }
     }
 
-    public function getRandomAddress() {
+    public function getRandomAddress()
+    {
         $randomIndex = rand(0, count($this->addresses) - 1);
         return $this->addresses[$randomIndex];
     }
 
-    public function getCitiesAndCountriesSize() {
+    public function getCitiesAndCountriesSize()
+    {
         return count($this->citiesAndCountries);
     }
 
-    public function getCountry($index) {
+    public function getCountry($index)
+    {
         $countries = array_keys($this->citiesAndCountries);
         return $countries[$index];
     }
 
-    public function getCity($index) {
+    public function getCity($index)
+    {
         $cities = array_values($this->citiesAndCountries);
         return $cities[$index];
     }
 
-    public function getCarsSize() {
+    public function getCarsSize()
+    {
         return count($this->cars);
     }
 
-    public function getMarke($index) {
+    public function getMarke($index)
+    {
         $carBrands = array_keys($this->cars);
         return $carBrands[$index];
     }
 
-    public function getModell($index) {
+    public function getModell($index)
+    {
         $carModels = array_values($this->cars);
         return $carModels[$index];
     }
 
-    public function getFirstName($index) {
+    public function getFirstName($index)
+    {
         $randomIndex = rand(0, count($this->firstNames) - 1);
         return $this->firstNames[$randomIndex];
     }
 
-    public function getFirstNameSize() {
+    public function getFirstNameSize()
+    {
         return count($this->firstNames);
     }
 
-    public function getSurname($index) {
+    public function getSurname($index)
+    {
         $randomIndex = rand(0, count($this->lastNames) - 1);
         return $this->lastNames[$randomIndex];
     }
 
-    public function getSurnameSize() {
+    public function getSurnameSize()
+    {
         return count($this->lastNames);
     }
 }

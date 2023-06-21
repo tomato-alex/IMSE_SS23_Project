@@ -47,7 +47,7 @@ class DatabaseHelper
     public function selectAllLocations($fid, $stadt, $land, $adresse)
     {
         //echo mysqli_error($this->conn);
-        $sql = "SELECT * FROM location WHERE 1=1";
+        $sql = "SELECT * FROM locations WHERE 1=1";
         $params = array();
 
         if (!empty($stadt)) {
@@ -146,7 +146,7 @@ class DatabaseHelper
     // This function creates and executes a SQL insert statement and returns true or false
     public function insertIntoLocation($stadt, $land, $adresse)
     {
-        $sql = "INSERT INTO location (city, country, address) VALUES (?, ?, ?)";
+        $sql = "INSERT INTO locations (city, country, address) VALUES (?, ?, ?)";
 
         $statement = mysqli_prepare($this->conn, $sql);
         mysqli_stmt_bind_param($statement, 'sss', $stadt, $land, $adresse);
@@ -202,7 +202,7 @@ class DatabaseHelper
 
     public function deleteLocation($location_id)
     {
-        $test = 'SELECT * FROM location WHERE locationId = ?';
+        $test = 'SELECT * FROM locations WHERE locationId = ?';
         $statement = mysqli_prepare($this->conn, $test);
         mysqli_stmt_bind_param($statement, 'i', $location_id);
         mysqli_stmt_execute($statement);
@@ -214,7 +214,7 @@ class DatabaseHelper
             return 0;
         }
 
-        $sql = 'DELETE FROM location WHERE locationId = ?';
+        $sql = 'DELETE FROM locations WHERE locationId = ?';
         $statement = mysqli_prepare($this->conn, $sql);
         mysqli_stmt_bind_param($statement, 'i', $location_id);
         mysqli_stmt_execute($statement);
@@ -266,7 +266,7 @@ class DatabaseHelper
 
     public function getLocationName($id)
     {
-        $sql = 'SELECT city FROM location WHERE locationId = ?';
+        $sql = 'SELECT city FROM locations WHERE locationId = ?';
         $statement = mysqli_prepare($this->conn, $sql);
         mysqli_stmt_bind_param($statement, 'i', $id);
 
@@ -285,7 +285,7 @@ class DatabaseHelper
     public function getFid()
     {
         $fid = array();
-        $stmt = $this->conn->prepare("SELECT locationId FROM location");
+        $stmt = $this->conn->prepare("SELECT locationId FROM locations");
         $stmt->execute();
         $result = $stmt->get_result();
 

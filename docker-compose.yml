@@ -1,13 +1,5 @@
 version: '3.7'
 services:
-  java:
-    image: openjdk:17
-    volumes:
-      - ./java:/java
-    working_dir: /java
-    command: java -jar databasefiller.jar
-    # Add any additional configuration for the Java container here
-
   mysql:
     image: mysql
     restart: always
@@ -18,8 +10,11 @@ services:
       - MYSQL_DATABASE=imse_23_ss
     volumes:
       - ./sql:/docker-entrypoint-initdb.d
+    #  - ./sql/entrypoint.sh:/entrypoint.sh
     ports:
       - 3308:3306
+    # entrypoint: ["/entrypoint.sh"]
+    # command: cd docker-entrypoint-initdb.d && mysql -uroot -ptestpass < drop.sql && mysql -uroot -ptestpass < mysql_create.sql
 
   mongodb:
     image: mongo

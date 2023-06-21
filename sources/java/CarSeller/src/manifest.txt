@@ -1,2 +1,0 @@
-Main-Class: Main
-Class-Path: mariadb-java-client-3.1.4.jar
