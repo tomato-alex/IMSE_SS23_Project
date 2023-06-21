@@ -242,9 +242,6 @@ padding-top: 0;">
             <input type="hidden" name="login" value="">
             <button type="submit">Logout</button>
         </form>
-        <input type="text" id="inputField" placeholder="Enter role">
-        <button onclick="showDivs()">Login</button>
-        <button onclick="setDef()">Logout</button>
     </div>
     <br>
 
