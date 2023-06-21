@@ -366,15 +366,14 @@ class DatabaseHelper
     // insertIntoVerkauft
     public function insertIntoVerkauft($mid, $aid, $preis, $date)
     {
-        $statementString = "INSERT INTO sells(employeeId, carId, price, date) VALUES (?, ?, ?, ?)";
-        try {
-            $prepStmt = $this->conn->prepare($statementString);
-            $prepStmt->bind_param("iids", $mid, $aid, $preis, $date);
-            $prepStmt->execute();
-            $prepStmt->close();
-        } catch (Exception $e) {
-            echo "Error at: insertIntoVerkauft\nmessage: " . $e->getMessage();
-        }
+        echo "<p>".$mid.$aid.$preis.$date."</p>";
+        $sql = "INSERT INTO sells(employeeId, carId, price, date) VALUES (?, ?, ?, ?)";
+            $statement = mysqli_prepare($this->conn, $sql);
+            mysqli_stmt_bind_param($statement,"iids", $mid, $aid, $preis, $date);
+            $success = mysqli_stmt_execute($statement);
+            mysqli_stmt_close($statement);
+
+            return $success;
     }
 
     // insertIntoHat
