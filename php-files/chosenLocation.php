@@ -66,7 +66,6 @@ if (isset($_GET['mid'])) {
     $mid = $_GET['mid'];
 }
 
-$sales = $database->selectSales($_SESSION["id"]);
 $locationName = $database->getLocationName($_SESSION["id"]);
 $employee_array = $database->selectEmployeesFromLocation($_SESSION["id"]);
 $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasingNr, $_SESSION["id"]);
@@ -398,23 +397,21 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
 
         <script>
             function validateFormSales() {
-                var employeeInput = parseInt(document.getElementById("employeeId").value.trim(), 10);
                 var carInput = parseInt(document.getElementById("carId").value.trim(), 10);
 
-                var sales = <?php echo json_encode(array_map('strval', $sales)); ?>;
+                var cars = <?php echo json_encode($cars_array); ?>;
 
-                for (var i = 0; i < sales.length; i++) {
-                    var sale = sales[i];
-                    var eId = parseInt(sale.employeeId, 10);
-                    var cId = parseInt(sale.carId, 10);
+                for (var i = 0; i < cars.length; i++) {
+                    var car = cars[i];
+                    var carId = parseInt(car.carId, 10);
 
-                    if (eId === employeeInput && cId === carInput) {
-                        alert("Car already sold.");
-                        return false; // Prevent form submission
+
+                    if (carId === carInput) {
+                        return true; // Proceed to the next page
                     }
                 }
-
-                return true; // Proceed to the next page
+                alert("Selected car is not available at this location.");
+                return false; // Prevent form submission
             }
         </script>
     </div>
