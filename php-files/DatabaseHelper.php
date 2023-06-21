@@ -124,6 +124,7 @@ class DatabaseHelper
     {
         $sql = "SELECT * FROM car 
          WHERE carId IN (SELECT carId from has WHERE locationId = '$id')
+         AND carId NOT IN (Select carId from sells)
           AND carId LIKE '%{$aid}%'
           AND upper(brand) LIKE upper('%{$marke}%')
           AND upper(modell) LIKE upper('%{$modell}%')
@@ -397,7 +398,7 @@ class DatabaseHelper
     // insertIntoVerkauft
     public function insertIntoVerkauft($mid, $aid, $preis, $date)
     {
-        echo "<p>" . $mid . $aid . $preis . $date . "</p>";
+        //echo "<p>" . $mid . $aid . $preis . $date . "</p>";
         $sql = "INSERT INTO sells(employeeId, carId, price, date) VALUES (?, ?, ?, ?)";
         $statement = mysqli_prepare($this->conn, $sql);
         mysqli_stmt_bind_param($statement, "iids", $mid, $aid, $preis, $date);

@@ -33,7 +33,7 @@ for ($leasing = 0; $leasing < 20; $leasing++) {
 
 // Car insertion
 $leasing_nr = $helper->getLeasingNR();
-for ($car = 0; $car <= 50; $car++) {
+for ($car = 0; $car <= 100; $car++) {
     $random = random_int(0, count($leasing_nr) - 1);
     $getter = random_int(0, $data_generator->getCarsSize());
     $helper->insertIntoCar($data_generator->getMarke($getter), $data_generator->getModell($getter), $leasing_nr[$random], $location_id[$random]);
@@ -72,7 +72,7 @@ foreach ($helper->getFid() as $i => $value) {
 // sells insert
 $employee_ids = $helper->getMitarbeiterId();
 $usedNumbers = array();
-for ($i = 0; $i < 500; $i++) {
+for ($i = 0; $i < 50; $i++) {
     $price = (random_int(20000, 200000)) * 100 / 100.00;
     $random_employee = random_int(0, count($employee_ids) - 1);
     $random_car = random_int(0, count($car_ids) - 1);

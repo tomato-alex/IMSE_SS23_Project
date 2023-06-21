@@ -6,6 +6,10 @@ require_once('DatabaseHelper.php');
 $database = new DatabaseHelper();
 
 //Grab variables from POST request
+$login = '';
+if (isset($_POST['login'])) {
+    $login = $_POST['login'];
+}
 $name = '';
 if (isset($_POST['name'])) {
     $name = $_POST['name'];
@@ -31,11 +35,9 @@ if ($success) {
 
 <!-- link back to previous page-->
 <br>
-<div style="
-    width: 8%;
-    margin: auto;
-    align-items: center">
-    <a href="chosenLocation.php">
-        <button class="button2"> go back</button>
-    </a>
+<div style="width: 8%;margin: auto;align-items: center">
+    <form method="post" action="chosenLocation.php">
+        <input type="hidden" name="login" value="<?php echo $login; ?>">
+        <button type="submit" class="button2">Go back</button>
+    </form>
 </div>
