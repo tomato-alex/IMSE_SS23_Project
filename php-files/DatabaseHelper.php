@@ -42,6 +42,37 @@ class DatabaseHelper
         mysqli_close($this->conn);
     }
 
+    public function checkEmployeeInDB($login)
+    {
+        $id = '';
+        $name = '';
+        if (preg_match('/^(\d+)([A-Za-z]+)$/', $login, $matches)) {
+            $id = $matches[1];
+            $name = $matches[2];
+        } else {
+            $name = $login;
+        }
+
+        // Extract the name part
+        $id = mysqli_real_escape_string($this->conn, $id);
+        $name = mysqli_real_escape_string($this->conn, $name);
+        //echo '<script>console.log("' . $id . '_' . $name . '__' . '")</script>';
+        $query = "SELECT COUNT(*) AS count FROM employee WHERE employeeId = '$id' AND first_name = '$name'";
+        $result = mysqli_query($this->conn, $query);
+        if ($result) {
+            $row = mysqli_fetch_assoc($result);
+            $count = $row['count'];
+            if ($count > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+
     // This function creates and executes a SQL select statement and returns an array as the result
     // 2-dimensional array: the result array contains nested arrays (each contains the data of a single row)
     public function selectAllLocations($fid, $stadt, $land, $adresse)

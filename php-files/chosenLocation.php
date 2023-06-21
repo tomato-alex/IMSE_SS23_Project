@@ -6,6 +6,12 @@ require_once('DatabaseHelper.php');
 //instantiate DatabaseHelper class
 $database = new DatabaseHelper();
 
+$login = '';
+if (isset($_POST['login'])) {
+    $login = $_POST['login'];
+    echo '<script>console.log("Login:", "' . $login . '")</script>';
+}
+
 $id = '';
 if (isset($_POST['id'])) {
     $id = $_POST['id'];
@@ -309,6 +315,7 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
             </table>
         </div>
 
+
     <br>
     <br>
     <!-- New Sale -->
@@ -340,8 +347,11 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
                 </tr>
                 <br>
 
-            </table>
-            <br>
+
+                <!-- Submit button -->
+                <div style="margin: auto;width: 18%;padding: 20px;">
+                    <input type="submit" name="button" value="Add Employee">
+                </div>
 
 
             <!-- Submit button -->
@@ -380,13 +390,11 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
 
         <!-- link back to index page-->
         <br>
-        <div style="
-    width: 8%;
-    margin: auto;
-    align-items: center">
-            <a href="index.php">
-                <button class="button2"> go back</button>
-            </a>
+        <div style="width: 8%;margin: auto;align-items: center">
+            <form method="post" action="index.php">
+                <input type="hidden" name="login" value="<?php echo $login; ?>">
+                <button type="submit" class="button2">Go back</button>
+            </form>
         </div>
 
 </body>

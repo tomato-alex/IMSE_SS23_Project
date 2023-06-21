@@ -3,6 +3,36 @@ require_once('DatabaseHelper.php');
 
 $database = new DatabaseHelper();
 
+$login = '';
+if (isset($_POST['login'])) {
+    $login = $_POST['login'];
+    echo '<script>console.log("Login:", "' . $login . '")</script>';
+    if ($login === 'admin') {
+        echo '<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var adminDiv = document.getElementById("adminDiv");
+            var employeeDiv = document.getElementById("employeeDiv");
+  
+            adminDiv.style.display = "block";
+            employeeDiv.style.display = "block";
+          });
+        </script>';
+    } else {
+        $exists = $database->checkEmployeeInDB($login);
+        if ($exists) {
+            echo '<script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    var adminDiv = document.getElementById("adminDiv");
+                    var employeeDiv = document.getElementById("employeeDiv");
+  
+                    adminDiv.style.display = "none";
+                    employeeDiv.style.display = "block";
+                });
+                </script>';
+        }
+    }
+}
+
 $fid = '';
 if (isset($_GET['fid'])) {
     $fid = $_GET['fid'];
@@ -153,32 +183,26 @@ $locations_array = $database->selectAllLocations($fid, $stadt, $land, $adresse);
             var inputText = document.getElementById("inputField").value.toLowerCase();
             var adminDiv = document.getElementById("adminDiv");
             var employeeDiv = document.getElementById("employeeDiv");
-            var defaultDiv = document.getElementById("defaultDiv");
 
             if (inputText === "admin") {
                 adminDiv.style.display = "block";
                 employeeDiv.style.display = "block";
-                defaultDiv.style.display = "block";
             } else if (inputText === "employee") {
                 adminDiv.style.display = "none";
                 employeeDiv.style.display = "block";
-                defaultDiv.style.display = "block";
             } else {
                 adminDiv.style.display = "none";
                 employeeDiv.style.display = "none";
-                defaultDiv.style.display = "block";
             }
         }
 
         function setDef() {
             var adminDiv = document.getElementById("adminDiv");
             var employeeDiv = document.getElementById("employeeDiv");
-            var defaultDiv = document.getElementById("defaultDiv");
 
 
             adminDiv.style.display = "none";
             employeeDiv.style.display = "none";
-            defaultDiv.style.display = "block";
 
         }
     </script>
@@ -208,15 +232,20 @@ padding-top: 0;">
             <div></div>
         </div>
     </div>
-    <a href="databaseFiller.php" class="floating-button" onclick="showSpinner()">Fill DB</a>
-    <a href="Drop.php" class="floating-button" style="bottom: 90px" onclick="showSpinner()">Delete all</a>
+    <!-- Input wrapper -->
     <div class=" input-wrapper">
-        <input type="text" id="inputField" placeholder="Enter role">
-        <button onclick="showDivs()">Login</button>
-        <button onclick="setDef()">Logout</button>
+        <form method="POST" action="index.php">
+            <input type="text" name="login" placeholder="Enter login">
+            <input type="hidden" name="get_param" value="some_value">
+            <button type="submit">Login</button>
+        </form>
+        <form method="POST" action="index.php">
+            <input type="hidden" name="login" value="">
+            <button type="submit">Logout</button>
+        </form>
     </div>
     <br>
-
+    <!--Location table-->
     <h2>Our Locations:</h2>
     <div class="tableContainer">
         <table class="table">
@@ -247,40 +276,56 @@ padding-top: 0;">
         <div class="form">
             <!-- Search form -->
             <h3>Location Search:</h3>
-            <form method="get">
+            <form method="post" id="searchForm" action>
 
                 <table class="table2">
                     <!-- ID textbox:-->
                     <tr class="spaceunder">
                         <td><label for="fid">ID:</label></td>
-                        <td><input id="fid" name="fid" type="text" value='<?php echo $fid; ?>' min="0"></td>
+                        <td><input id="fid" name="fid" type="text" value='' min="0"></td>
                     </tr>
-                    <br>
                     <!-- Country textbox:-->
                     <tr class="spaceunder">
                         <td><label for="land">Country:</label></td>
-                        <td><input id="land" name="land" type="text" value='<?php echo $land; ?>' maxlength="20"></td>
+                        <td><input id="land" name="land" type="text" value='' maxlength="20"></td>
                     </tr>
-                    <br>
-
                     <!-- City textbox:-->
                     <tr class="spaceunder">
                         <td><label for="stadt">City:</label></td>
-                        <td><input id="stadt" name="stadt" type="text" value='<?php echo $stadt; ?>' maxlength="20"></td>
+                        <td><input id="stadt" name="stadt" type="text" value='' maxlength="20"></td>
                     </tr>
-
-                    <br>
                 </table>
                 <br>
-
+                <input type="hidden" name="login" value="<?php echo $login; ?>">
                 <!-- Submit button -->
-                <div style="margin: auto;
-            width: 15%;
-            padding: 20px; ">
-                    <button id='submit' type='submit'>
-                        Search
-                    </button>
+                <div style="margin: auto; width: 15%; padding: 20px; ">
+                    <button id='submit' type='submit'>Search</button>
                 </div>
+                <script>
+                    document.getElementById('searchForm').addEventListener('submit', function(event) {
+                        // Get the fid input value
+                        var fidValue = document.getElementById('fid').value;
+                        var landValue = document.getElementById('land').value;
+                        var stadtValue = document.getElementById('stadt').value;
+                        // Build the URL query string
+                        var queryString = 'fid=' + encodeURIComponent(fidValue);
+                        queryString += '&land=';
+                        queryString += encodeURIComponent(landValue);
+                        queryString += '&stadt=';
+                        queryString += encodeURIComponent(stadtValue);
+                        document.getElementById('fid').value = '';
+                        document.getElementById('land').value = '';
+                        document.getElementById('stadt').value = '';
+                        // Get the current page URL
+                        var currentPageUrl = "index.php";
+
+                        // Append the query string to the current URL
+                        var redirectUrl = currentPageUrl + '?' + queryString;
+
+                        // Update the form's action attribute
+                        this.action = redirectUrl;
+                    });
+                </script>
             </form>
         </div>
         <br>
@@ -300,18 +345,11 @@ padding-top: 0;">
                             <td><label for="new_name">ID:</label></td>
                             <td><input id="new_name" name="id" type="text" maxlength="20"></td>
                         </tr>
-                        <br>
-
                     </table>
-                    <br>
-
+                    <input type="hidden" name="login" value="<?php echo $login; ?>">
                     <!-- Submit button -->
-                    <div style="margin: auto;
-            width: 18%;
-            padding: 20px;">
-                        <button type="submit">
-                            Choose
-                        </button>
+                    <div style="margin: auto; width: 18%; padding: 20px;">
+                        <button type="submit">Choose</button>
                     </div>
                 </form>
             </div>
@@ -322,7 +360,6 @@ padding-top: 0;">
 
                     // Array of valid IDs
                     var validIds = <?php echo json_encode(array_map('strval', $database->getFid())); ?>;
-
                     if (!validIds.includes(inputId)) {
                         alert("Invalid ID! Please enter a valid ID.");
                         return false; // Prevent form submission
@@ -335,6 +372,8 @@ padding-top: 0;">
         </div>
         <hr>
         <div id="adminDiv" class="container">
+            <a href="databaseFiller.php" class="floating-button" onclick="showSpinner()">Fill DB</a>
+            <a href="Drop.php" class="floating-button" style="bottom: 90px" onclick="showSpinner()">Delete all</a>
             <!-- Add Location -->
             <div class="form">
                 <h3>Add Location: </h3>
