@@ -23,7 +23,7 @@ $success = $database->insertIntoEmployee($name, $surname, $_SESSION["id"]);
 if ($success) {
     echo "<p class='phpecho'> {$name} {$surname} successfully added!</p>";
 } else {
-    echo "<p class='phpecho'>Error can't insert  {$name} {$surname}!</p>";
+    echo "<p class='phpecho'>Error can't insert  {$name},{$surname}!</p>";
 }
 ?>
 <title>Best Cars</title>
