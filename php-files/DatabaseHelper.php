@@ -46,17 +46,17 @@ class DatabaseHelper
     {
         $id = '';
         $name = '';
-        $firstNonNumericPos = strcspn($login, '0123456789') + 1;
-
-        if ($firstNonNumericPos > 0) {
-            $id = substr($login, 0, $firstNonNumericPos);
+        if (preg_match('/^(\d+)([A-Za-z]+)$/', $login, $matches)) {
+            $id = $matches[1];
+            $name = $matches[2];
+        } else {
+            $name = $login;
         }
 
         // Extract the name part
-        $name = substr($login, $firstNonNumericPos);
         $id = mysqli_real_escape_string($this->conn, $id);
         $name = mysqli_real_escape_string($this->conn, $name);
-        //echo '<script>console.log("' . $id . '_' . $name . '")</script>';
+        //echo '<script>console.log("' . $id . '_' . $name . '__' . '")</script>';
         $query = "SELECT COUNT(*) AS count FROM employee WHERE employeeId = '$id' AND first_name = '$name'";
         $result = mysqli_query($this->conn, $query);
         if ($result) {
