@@ -10,6 +10,7 @@ class DatabaseHelper
     const port = '3306';
 
     protected $conn;
+    protected static $tablesCreated = false;
 
     // Create connection in the constructor
     public function __construct()
@@ -26,11 +27,51 @@ class DatabaseHelper
 
             // Check if the connection object is not null
             if (!$this->conn) {
-                die("DB error: Connection can't be established!");
+                echo "<script>console.log('" . $this->conn . "');</script>";
+                //die("DB error: Connection can't be established!");
+                $this->conn = mysqli_connect(
+                    DatabaseHelper::host,
+                    DatabaseHelper::username,
+                    DatabaseHelper::password,
+                    null,
+                    DatabaseHelper::port
+                );
+                $createScript = file_get_contents('createDB.sql');
+                if ($createScript) {
+                    // Execute the create script
+                    $result = mysqli_multi_query($this->conn, $createScript);
+                    if (!$result) {
+                        die("DB error: Failed to execute the create script: " . mysqli_error($this->conn));
+                    }
+                } else {
+                    die("DB error: Failed to read the create script.");
+                }
+                mysqli_select_db($this->conn, DatabaseHelper::database);
             }
         } catch (Exception $e) {
             die("DB error: {$e->getMessage()}");
         }
+    }
+    public function getCreated()
+    {
+        return $this->tablesCreated;
+    }
+    public function createTables()
+    {
+        if ($this->tablesCreated === true) {
+            return;
+        }
+        $createTables = file_get_contents('create_script.sql');
+        if ($createTables) {
+            // Execute the create script
+            $result = mysqli_multi_query($this->conn, $createTables);
+            if (!$result) {
+                die("DB error: Failed to execute the create script: " . mysqli_error($this->conn));
+            }
+        } else {
+            die("DB error: Failed to read the create script.");
+        }
+        $this->tablesCreated = true;
     }
     public function getConnection()
     {

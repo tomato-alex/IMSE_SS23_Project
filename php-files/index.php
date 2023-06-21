@@ -2,7 +2,9 @@
 require_once('DatabaseHelper.php');
 
 $database = new DatabaseHelper();
-
+if ($database->getCreated() === false) {
+    $database->createTables();
+}
 $login = '';
 if (isset($_POST['login'])) {
     $login = $_POST['login'];
