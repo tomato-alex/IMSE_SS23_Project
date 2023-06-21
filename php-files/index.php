@@ -3,6 +3,35 @@ require_once('DatabaseHelper.php');
 
 $database = new DatabaseHelper();
 
+$login = '';
+if (isset($_POST['login'])) {
+    $login = $_POST['login'];
+    if ($login === 'admin') {
+        echo '<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var adminDiv = document.getElementById("adminDiv");
+            var employeeDiv = document.getElementById("employeeDiv");
+  
+            adminDiv.style.display = "block";
+            employeeDiv.style.display = "block";
+          });
+        </script>';
+    } else {
+        $exists = $database->checkEmployeeInDB($login);
+        if ($exists) {
+            echo '<script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    var adminDiv = document.getElementById("adminDiv");
+                    var employeeDiv = document.getElementById("employeeDiv");
+  
+                    adminDiv.style.display = "none";
+                    employeeDiv.style.display = "block";
+                });
+                </script>';
+        }
+    }
+}
+
 $fid = '';
 if (isset($_GET['fid'])) {
     $fid = $_GET['fid'];
@@ -153,32 +182,26 @@ $locations_array = $database->selectAllLocations($fid, $stadt, $land, $adresse);
             var inputText = document.getElementById("inputField").value.toLowerCase();
             var adminDiv = document.getElementById("adminDiv");
             var employeeDiv = document.getElementById("employeeDiv");
-            var defaultDiv = document.getElementById("defaultDiv");
 
             if (inputText === "admin") {
                 adminDiv.style.display = "block";
                 employeeDiv.style.display = "block";
-                defaultDiv.style.display = "block";
             } else if (inputText === "employee") {
                 adminDiv.style.display = "none";
                 employeeDiv.style.display = "block";
-                defaultDiv.style.display = "block";
             } else {
                 adminDiv.style.display = "none";
                 employeeDiv.style.display = "none";
-                defaultDiv.style.display = "block";
             }
         }
 
         function setDef() {
             var adminDiv = document.getElementById("adminDiv");
             var employeeDiv = document.getElementById("employeeDiv");
-            var defaultDiv = document.getElementById("defaultDiv");
 
 
             adminDiv.style.display = "none";
             employeeDiv.style.display = "none";
-            defaultDiv.style.display = "block";
 
         }
     </script>
@@ -208,9 +231,17 @@ padding-top: 0;">
             <div></div>
         </div>
     </div>
-    <a href="databaseFiller.php" class="floating-button" onclick="showSpinner()">Fill DB</a>
-    <a href="Drop.php" class="floating-button" style="bottom: 90px" onclick="showSpinner()">Delete all</a>
+
     <div class=" input-wrapper">
+        <form method="POST" action="index.php">
+            <input type="text" name="login" placeholder="Enter login">
+            <input type="hidden" name="get_param" value="some_value">
+            <button type="submit">Login</button>
+        </form>
+        <form method="POST" action="index.php">
+            <input type="hidden" name="login" value="">
+            <button type="submit">Logout</button>
+        </form>
         <input type="text" id="inputField" placeholder="Enter role">
         <button onclick="showDivs()">Login</button>
         <button onclick="setDef()">Logout</button>
@@ -335,6 +366,8 @@ padding-top: 0;">
         </div>
         <hr>
         <div id="adminDiv" class="container">
+            <a href="databaseFiller.php" class="floating-button" onclick="showSpinner()">Fill DB</a>
+            <a href="Drop.php" class="floating-button" style="bottom: 90px" onclick="showSpinner()">Delete all</a>
             <!-- Add Location -->
             <div class="form">
                 <h3>Add Location: </h3>
