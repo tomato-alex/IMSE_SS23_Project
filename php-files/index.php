@@ -275,40 +275,56 @@ padding-top: 0;">
         <div class="form">
             <!-- Search form -->
             <h3>Location Search:</h3>
-            <form method="get">
+            <form method="post" id="searchForm" action>
 
                 <table class="table2">
                     <!-- ID textbox:-->
                     <tr class="spaceunder">
                         <td><label for="fid">ID:</label></td>
-                        <td><input id="fid" name="fid" type="text" value='<?php echo $fid; ?>' min="0"></td>
+                        <td><input id="fid" name="fid" type="text" value='' min="0"></td>
                     </tr>
-                    <br>
                     <!-- Country textbox:-->
                     <tr class="spaceunder">
                         <td><label for="land">Country:</label></td>
-                        <td><input id="land" name="land" type="text" value='<?php echo $land; ?>' maxlength="20"></td>
+                        <td><input id="land" name="land" type="text" value='' maxlength="20"></td>
                     </tr>
-                    <br>
-
                     <!-- City textbox:-->
                     <tr class="spaceunder">
                         <td><label for="stadt">City:</label></td>
-                        <td><input id="stadt" name="stadt" type="text" value='<?php echo $stadt; ?>' maxlength="20"></td>
+                        <td><input id="stadt" name="stadt" type="text" value='' maxlength="20"></td>
                     </tr>
-
-                    <br>
                 </table>
                 <br>
-
+                <input type="hidden" name="login" value="<?php echo $login; ?>">
                 <!-- Submit button -->
-                <div style="margin: auto;
-            width: 15%;
-            padding: 20px; ">
-                    <button id='submit' type='submit'>
-                        Search
-                    </button>
+                <div style="margin: auto; width: 15%; padding: 20px; ">
+                    <button id='submit' type='submit'>Search</button>
                 </div>
+                <script>
+                    document.getElementById('searchForm').addEventListener('submit', function(event) {
+                        // Get the fid input value
+                        var fidValue = document.getElementById('fid').value;
+                        var landValue = document.getElementById('land').value;
+                        var stadtValue = document.getElementById('stadt').value;
+                        // Build the URL query string
+                        var queryString = 'fid=' + encodeURIComponent(fidValue);
+                        queryString += '&land=';
+                        queryString += encodeURIComponent(landValue);
+                        queryString += '&stadt=';
+                        queryString += encodeURIComponent(stadtValue);
+                        document.getElementById('fid').value = '';
+                        document.getElementById('land').value = '';
+                        document.getElementById('stadt').value = '';
+                        // Get the current page URL
+                        var currentPageUrl = "index.php";
+
+                        // Append the query string to the current URL
+                        var redirectUrl = currentPageUrl + '?' + queryString;
+
+                        // Update the form's action attribute
+                        this.action = redirectUrl;
+                    });
+                </script>
             </form>
         </div>
         <br>
