@@ -103,17 +103,6 @@ h2 {
     margin-bottom: 35px;
 }
 
-.form {
-    background-color: steelblue;
-    border-radius: 15px;
-    padding: 105px 0;
-    padding-bottom: 0;
-    padding-top: 20px;
-    width: 40%;
-    margin: auto;
-    margin-bottom: 0;
-    box-shadow: 7px 7px #87d9fa
-}
 
 .button {
     margin: auto;

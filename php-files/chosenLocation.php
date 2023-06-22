@@ -124,7 +124,15 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
     <br>
     <br>
     <!-- New Sale -->
-    <div class="form" id="noadmin" style="box-shadow: 7px 7px #87d9fa">
+    <div class="form" id="noadmin" style="background-color: steelblue;
+    border-radius: 15px;
+    padding: 105px 0;
+    padding-bottom: 0;
+    padding-top: 20px;
+    width: 40%;
+    margin: auto;
+    margin-bottom: 0;
+    box-shadow: 7px 7px #87d9fa">
         <h3>New Sale: </h3>
 
         <form method="post" action="addSale.php" onsubmit="return validateFormSales()">
@@ -173,8 +181,16 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
     </div>
 
     <!-- Add Car -->
-    <div class="next2" style="display:flex; justify-content: space-between;">
-        <div class="form" style="box-shadow: 7px 7px #87d9fa">
+    <div class="next2" style="display:flex; justify-content: center;">
+        <div class="form" style="background-color: steelblue;
+    border-radius: 15px;
+    padding: 105px 0;
+    padding-bottom: 0;
+    padding-top: 20px;
+    width: 40%;
+    margin: 0px 20px 0px 20px;
+    box-shadow: 7px 7px #87d9fa;
+    max-width: 450px; min-width: 300px;">
             <h3>Add Car: </h3>
 
             <form method="post" action="addCar.php">
@@ -212,7 +228,14 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
             </form>
         </div>
 
-        <div class="form" style="box-shadow: 7px 7px #87d9fa">
+        <div class="form" style="box-shadow: 7px 7px #87d9fa;background-color: steelblue;
+    border-radius: 15px;
+    padding: 105px 0;
+    padding-bottom: 0;
+    padding-top: 20px;
+    width: 40%;
+    margin: 0px 20px 0px 20px;
+    max-width: 450px; min-width: 300px;">
             <!-- Delete Car -->
             <h3>Delete Car: </h3>
             <form method="post" action="delCar.php">
@@ -233,8 +256,16 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
     </div>
     <br>
     <!-- Add Employee -->
-    <div class="next2" style="display:none; justify-content: space-between;" id="noemployee">
-        <div class="form" style="box-shadow: 7px 7px #87d9fa">
+    <div class="next2" style="display:none; justify-content: center;" id="noemployee">
+        <div class="form" style="background-color: steelblue;
+    border-radius: 15px;
+    padding: 105px 0;
+    padding-bottom: 0;
+    padding-top: 20px;
+    width: 40%;
+    margin: 0px 20px 0px 20px;
+    box-shadow: 7px 7px #87d9fa;
+    max-width: 450px; min-width: 300px;">
             <h3>Add Employee: </h3>
 
             <form method="post" action="addEmployee.php" onsubmit="return validateForm()">
@@ -291,7 +322,15 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
             </script>
         </div>
 
-        <div class="form" style="box-shadow: 7px 7px #87d9fa">
+        <div class="form" style="background-color: steelblue;
+    border-radius: 15px;
+    padding: 105px 0;
+    padding-bottom: 0;
+    padding-top: 20px;
+    width: 40%;
+    margin: 0px 20px 0px 20px;
+    box-shadow: 7px 7px #87d9fa;
+    max-width: 450px; min-width: 300px;">
             <!-- Delete Employee -->
             <h3>Delete Employee: </h3>
             <form method="post" action="delEmployee.php">
@@ -314,10 +353,10 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
     </div>
     <br>
 
-
+    <h3 style="font-size: 45px; text-align: center;">Our Staff Members:</h3>
 
     <div style=" padding: 0px; height: 250px; width: 850px; overflow: hidden; overflow-y: auto; margin-left: auto; margin-right: auto;">
-        <h3 style="font-size: 45px; text-align: left;">Our Staff Members:</h3>
+
         <table class="table">
             <thead class="head1">
                 <tr>
@@ -342,6 +381,7 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
 
     <!--Sales-->
 
+    <h3 style="font-size: 45px; text-align: center;">Sales:</h3>
     <div style="padding: 0px;
     height: 300px;
     width: 850px;
@@ -349,7 +389,7 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
     overflow-y: auto;
     margin-left: auto;
     margin-right: auto;">
-        <h3 style="font-size: 45px; text-align: left;">Sales:</h3>
+
         <table class="table">
             <thead class="head">
                 <tr>
@@ -375,8 +415,7 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
             <?php endforeach; ?>
         </table>
     </div>
-    <br>
-
+    <h3 style="font-size: 45px; text-align: center;">Employee Performance:</h3>
     <div style="padding: 0px;
     height: 300px;
     width: 850px;
@@ -384,7 +423,7 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
     overflow-y: auto;
     margin-left: auto;
     margin-right: auto;">
-        <h3 style="font-size: 45px; text-align: left;">Employee Performance:</h3>
+
         <table class="table">
             <thead class="head">
                 <tr>
