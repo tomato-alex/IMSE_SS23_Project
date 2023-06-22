@@ -92,6 +92,7 @@ tr.spaceunder > td {
     padding-bottom: 15px;
 }
 
+
 h3 {
     font-family: Helvetica;
     text-align: center;
@@ -103,6 +104,16 @@ h2 {
     margin-bottom: 35px;
 }
 
+.form {
+    background-color: steelblue;
+    border-radius: 15px;
+    padding: 105px 0;
+    padding-bottom: 0;
+    padding-top: 20px;
+    width: 50%;
+    margin: auto;
+    margin-bottom: 0;
+}
 
 .button {
     margin: auto;
