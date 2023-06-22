@@ -22,16 +22,16 @@ class DataGenerator
         "Mazda" => "CX-5"
     ];
     private $citiesAndCountries = [
-        "Turkey" => "Istanbul",
-        "United States" => "New York",
-        "United Kingdom" => "London",
-        "France" => "Paris",
-        "Germany" => "Berlin",
-        "Italy" => "Rome",
-        "Spain" => "Madrid",
-        "Canada" => "Toronto",
-        "Australia" => "Sydney",
-        "Japan" => "Tokyo"
+        "Bratislava" => "Slovakia",
+        "Prague" => "Czech Republic",
+        "Vienna" => "Austria",
+        "Linz" => "Austria",
+        "Graz" => "Austria",
+        "Brno" => "Czech Republic",
+        "London" => "United Kingdom",
+        "Passau" => "Germany",
+        "Eisenstadt" => "Austria",
+        "Budapest" => "Hungary"
     ];
 
     public function __construct()
@@ -59,13 +59,13 @@ class DataGenerator
 
     public function getCountry($index)
     {
-        $countries = array_keys($this->citiesAndCountries);
+        $countries = array_values($this->citiesAndCountries);
         return $countries[$index];
     }
 
     public function getCity($index)
     {
-        $cities = array_values($this->citiesAndCountries);
+        $cities = array_keys($this->citiesAndCountries);
         return $cities[$index];
     }
 

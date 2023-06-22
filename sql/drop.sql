@@ -1,6 +1,6 @@
 use imse_23_ss;
--- DROP VIEW total_sales;
--- DROP VIEW leasing_options;
+DROP VIEW total_sales;
+DROP VIEW leasing_options;
 DROP TABLE has;
 DROP TABLE sells;
 DROP TABLE employee;

@@ -27,71 +27,11 @@ class DatabaseHelper
 
             // Check if the connection object is not null
             if (!$this->conn) {
-                //$this->tablesCreated = false;
-                //echo "<script>console.log('" . $this->conn . "');</script>";
                 die("DB error: Connection can't be established!");
-                /*$this->conn = mysqli_connect(
-                    DatabaseHelper::host,
-                    DatabaseHelper::username,
-                    DatabaseHelper::password,
-                    null,
-                    DatabaseHelper::port
-                );
-                $createScript = file_get_contents('createDB.sql');
-                if ($createScript) {
-                    // Execute the create script
-                    $result = mysqli_multi_query($this->conn, $createScript);
-                    if (!$result) {
-                        die("DB error: Failed to execute the create script: " . mysqli_error($this->conn));
-                    }
-                } else {
-                    die("DB error: Failed to read the create script.");
-                }
-                mysqli_select_db($this->conn, DatabaseHelper::database);
-                $this->createTables();*/
             }
         } catch (Exception $e) {
             die("DB error: {$e->getMessage()}");
         }
-    }
-    private function areTablesCreated()
-    {
-        // Check if the tables already exist in the database
-        $checkTablesQuery = "SELECT COUNT(*) as table_count FROM information_schema.tables WHERE table_schema = '" . DatabaseHelper::database . "'";
-        $result = mysqli_query($this->conn, $checkTablesQuery);
-        //sleep(5);
-        if (!$result) {
-            echo '<script>console.log("DB error: Failed to execute the query: "' . mysqli_error($this->conn) . ')<script>';
-            return false;
-        }
-        $row = mysqli_fetch_assoc($result);
-        $tableCount = $row['table_count'];
-        return ($tableCount > 0);
-    }
-    public function getCreated()
-    {
-        return $this->tablesCreated;
-    }
-    public function createTables()
-    {
-        if ($this->tablesCreated === true) {
-            return;
-        }
-        $attempt = 0;
-        while ($attempt < 5 && $this->areTablesCreated() === false) {
-            $createTables = file_get_contents('create_script.sql');
-            if ($createTables) {
-                // Execute the create script
-                $result = mysqli_multi_query($this->conn, $createTables);
-                if (!$result) {
-                    die("DB error: Failed to execute the create script: " . mysqli_error($this->conn));
-                }
-            } else {
-                die("DB error: Failed to read the create script.");
-            }
-            $attempt++;
-        }
-        $this->tablesCreated = true;
     }
     public function getConnection()
     {

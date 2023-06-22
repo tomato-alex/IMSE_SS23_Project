@@ -14,8 +14,6 @@ services:
     #  - ./sql/entrypoint.sh:/entrypoint.sh
     ports:
       - 3308:3306
-    # entrypoint: ["/entrypoint.sh"]
-    # command: cd docker-entrypoint-initdb.d && mysql -uroot -ptestpass < drop.sql && mysql -uroot -ptestpass < mysql_create.sql
 
   mongodb:
     image: mongo
