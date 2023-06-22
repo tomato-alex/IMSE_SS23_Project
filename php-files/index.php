@@ -187,7 +187,7 @@ $locations_array = $database->selectAllLocations($fid, $stadt, $land, $adresse);
         }
     </style>
     <meta charset="utf-8">
-    <title>Best Cars</title>
+    <title>IMSE</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
     <script>
@@ -240,9 +240,13 @@ background-size: cover;
 height: 800px;
 padding-top: 0;">
 
-        <h1 style="color: cadetblue; text-shadow: 5px 3px 7px black;
+        <h1 style="color: mintcream; text-shadow: 5px 3px 7px black;
 -webkit-text-stroke-width: 1px;
-  -webkit-text-stroke-color: steelblue;">Best Cars</h1>
+  -webkit-text-stroke-color: steelblue;font-size: 100px;
+    font-family: Helvetica;
+    text-align: center;
+    padding-top: 300px;
+    margin-top: 0;">International Motorvehicle<br>Sales Enterprise</h1>
 
     </div>
     <!-- floating insert button -->
@@ -269,7 +273,7 @@ padding-top: 0;">
     <br>
     <!--Location table-->
     <h2 style="text-shadow: 3px 2px 2px steelblue">Our Locations:</h2>
-    <div class="tableContainer" >
+    <div class="tableContainer">
         <table class="table">
             <thead class="head">
                 <tr>

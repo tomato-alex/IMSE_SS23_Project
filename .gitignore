@@ -1,4 +1,5 @@
 sources/java/CarSeller/.idea/
 .DS_Store
 *.mov
-mongodb-data
+mongodb-data/
+old_docker_compose.yml
