@@ -76,7 +76,7 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
 
 <head>
     <meta charset="utf-8">
-    <title>Best Cars</title>
+    <title>Chosen Location</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -85,9 +85,7 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
 
     <div class="image1">
         <?php foreach ($locationName as $name) : ?>
-            <h1 style="color: cadetblue; text-shadow: 5px 3px 7px black;
--webkit-text-stroke-width: 1px;
-  -webkit-text-stroke-color: steelblue;"><?php echo $name['city'] ?></h1>
+            <h1 style=" color: mintcream; text-shadow: 5px 3px 7px black; -webkit-text-stroke-width: 1px; -webkit-text-stroke-color: steelblue;font-size: 100px; font-family: Helvetica; text-align: center; padding-top: 300px; margin-top: 0;"><?php echo $name['city'] ?></h1>
         <?php endforeach; ?>
     </div>
 
@@ -99,7 +97,7 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
             <button type="submit" class="button2">Go back</button>
         </form>
     </div>
-    <h2>Available Cars:</h2>
+    <h2 style="text-shadow: 3px 2px 2px steelblue; text-align: center; ">Available Cars:</h2>
     <div class="tableContainer">
 
         <table class="table">
