@@ -314,9 +314,10 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
     </div>
     <br>
 
-    <h3 style="font-size: 45px; text-align: left;">Our Staff Members:</h3>
 
-    <div style=" padding: 0px; height: 250px; width: 450px; overflow: hidden; overflow-y: auto; border-radius: 15px; margin-left: auto; margin-right: auto; border: 1px solid;">
+
+    <div style=" padding: 0px; height: 250px; width: 850px; overflow: hidden; overflow-y: auto; margin-left: auto; margin-right: auto;">
+        <h3 style="font-size: 45px; text-align: left;">Our Staff Members:</h3>
         <table class="table">
             <thead class="head1">
                 <tr>
@@ -338,7 +339,7 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
     <?php echo "<script>console.log('" . $_SESSION["id"] . "')</script>" ?>
     <?php $sales_array = $database->selectSales($_SESSION["id"]); ?>
     <?php $sales_2 = $database->selectSells($_SESSION["id"]); ?>
-    <h3 style="font-size: 45px; text-align: left;">Sales:</h3>
+
     <!--Sales-->
 
     <div style="padding: 0px;
@@ -348,7 +349,7 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
     overflow-y: auto;
     margin-left: auto;
     margin-right: auto;">
-
+        <h3 style="font-size: 45px; text-align: left;">Sales:</h3>
         <table class="table">
             <thead class="head">
                 <tr>
@@ -369,13 +370,13 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
                     <td><?php echo $sale['brand']; ?> </td>
                     <td><?php echo $sale['modell']; ?> </td>
                     <td><?php echo $sale['price'] . " €"; ?> </td>
-                    <td><?php echo $sale['dare']; ?> </td>
+                    <td><?php echo $sale['date']; ?> </td>
                 </tr>
             <?php endforeach; ?>
         </table>
     </div>
     <br>
-    <h3 style="font-size: 45px; text-align: left;">Employee Performance:</h3>
+
     <div style="padding: 0px;
     height: 300px;
     width: 850px;
@@ -383,6 +384,7 @@ $cars_array = $database->selectCarsFromLocation($CarID, $brand, $model, $leasing
     overflow-y: auto;
     margin-left: auto;
     margin-right: auto;">
+        <h3 style="font-size: 45px; text-align: left;">Employee Performance:</h3>
         <table class="table">
             <thead class="head">
                 <tr>
